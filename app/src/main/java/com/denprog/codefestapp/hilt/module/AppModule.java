@@ -5,6 +5,7 @@ import android.content.Context;
 import androidx.room.Room;
 
 import com.denprog.codefestapp.room.AppDatabase;
+import com.denprog.codefestapp.room.dao.AppDao;
 
 import javax.inject.Singleton;
 
@@ -21,6 +22,7 @@ public class AppModule {
     @Provides
     @Singleton
     public AppDatabase provideAppDatabase(@ApplicationContext Context context) {
+
         return Room.databaseBuilder(context, AppDatabase.class, "AppDatabase").fallbackToDestructiveMigration().build();
     }
 

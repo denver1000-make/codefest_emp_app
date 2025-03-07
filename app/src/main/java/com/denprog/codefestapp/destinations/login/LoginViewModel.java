@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
+import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
@@ -77,6 +78,18 @@ public class LoginViewModel extends ViewModel {
         });
     }
 
+    public void checkIfUserIsUnderReview (int userId, OnUserReviewStatus onUserReviewStatus) {
+        CompletableFuture<List<AccountForReview>> completableFuture = CompletableFuture.supplyAsync(() -> appDao.getUserReview(userId));
+
+        completableFuture.thenAccept(accountForReviews -> {
+            if (accountForReviews.isEmpty()) {
+                onUserReviewStatus.onUserIsNotUnderReview();
+            } else {
+                onUserReviewStatus.onUserIsUnderReview();
+            }
+        });
+    }
+
     public static class RoleState {
 
         public static final class AdminState extends RoleState {
@@ -112,6 +125,11 @@ public class LoginViewModel extends ViewModel {
             }
         }
 
+    }
+
+    public interface OnUserReviewStatus {
+        void onUserIsNotUnderReview();
+        void onUserIsUnderReview();
     }
 
 

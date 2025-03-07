@@ -28,7 +28,6 @@ public class FileUtil {
         String scheme = uri.getScheme();
         if (scheme != null && scheme.equals("file")) {
             name = uri.getLastPathSegment();
-
         } else {
             try (Cursor cursor = context.getContentResolver().query(uri, null, null, null, null)) {
                 if (cursor != null) {
@@ -46,10 +45,6 @@ public class FileUtil {
         return name;
     }
 
-    public static void saveRegistrationFile(Context context, Uri uri) {
-        String uriFileName = getFileName(context, uri);
-        File savePath = new File(context.getFilesDir(), uriFileName);
-    }
 
     public static String pathExtract(String displayName) {
         String[] split = displayName.split("\\.");

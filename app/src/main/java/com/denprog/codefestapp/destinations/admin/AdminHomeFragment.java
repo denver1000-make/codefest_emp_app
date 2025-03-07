@@ -3,7 +3,13 @@ package com.denprog.codefestapp.destinations.admin;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,60 +19,38 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.denprog.codefestapp.R;
+import com.denprog.codefestapp.databinding.FragmentApplicationListBinding;
 import com.denprog.codefestapp.destinations.admin.placeholder.PlaceholderContent;
+import com.denprog.codefestapp.room.entity.User;
 
-/**
- * A fragment representing a list of Items.
- */
+import java.util.Collections;
+import java.util.List;
+
 public class AdminHomeFragment extends Fragment {
-
-    // TODO: Customize parameter argument names
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
-    private int mColumnCount = 1;
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public AdminHomeFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static AdminHomeFragment newInstance(int columnCount) {
-        AdminHomeFragment fragment = new AdminHomeFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    ApplicationRecyclerViewAdapter adapter;
+    FragmentApplicationListBinding binding;
+    AdminHomeViewModel viewModel;
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_application_list, container, false);
+        binding = FragmentApplicationListBinding.inflate(inflater, container, false);
+        RecyclerView rcv = binding.getRoot();
+        rcv.setLayoutManager(new LinearLayoutManager(requireContext()));
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_home);
+        this.adapter = new ApplicationRecyclerViewAdapter((int userId) -> {
+            navController.navigate(AdminHomeFragmentDirections.actionAdminHomeFragmentToViewUserFragment(userId));
+        });
+        rcv.setAdapter(adapter);
+        return binding.getRoot();
+    }
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
-            recyclerView.setAdapter(new ApplicationRecyclerViewAdapter(PlaceholderContent.ITEMS));
-        }
-        return view;
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        this.viewModel = new ViewModelProvider(requireActivity()).get(AdminHomeViewModel.class);
+        viewModel.getAccountsToReview();
+        viewModel.credentialsList.observe(getViewLifecycleOwner(), users -> {
+            adapter.refreshList(users);
+        });
     }
 }

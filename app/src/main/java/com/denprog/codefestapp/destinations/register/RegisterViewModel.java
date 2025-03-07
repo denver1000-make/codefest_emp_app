@@ -8,9 +8,11 @@ import androidx.collection.MutableObjectList;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+import androidx.room.Room;
 
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
+import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
@@ -27,6 +29,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpCookie;
+import java.nio.channels.FileChannel;
+import java.sql.Blob;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -69,20 +73,20 @@ public class RegisterViewModel extends ViewModel {
         String password = confirmPasswordField.get();
         String confirmPassword = confirmPasswordField.get();
 
-        if (Validator.areInputNull(firstName, middleName, lastName, email, password, confirmPassword)) {
-            userMutableLiveData.setValue(new UIState.Fail<>("Empty Field"));
-            return;
-        }
-
-        if (!password.equals(confirmPassword)) {
-            userMutableLiveData.setValue(new UIState.Fail<>("Password Mismatch"));
-            return;
-        }
-
-        if (!Validator.isEmailValid(email)) {
-            userMutableLiveData.setValue(new UIState.Fail<>("Email Invalid Format"));
-            return;
-        }
+//        if (Validator.areInputNull(firstName, middleName, lastName, email, password, confirmPassword)) {
+//            userMutableLiveData.setValue(new UIState.Fail<>("Empty Field"));
+//            return;
+//        }
+//
+//        if (!password.equals(confirmPassword)) {
+//            userMutableLiveData.setValue(new UIState.Fail<>("Password Mismatch"));
+//            return;
+//        }
+//
+//        if (!Validator.isEmailValid(email)) {
+//            userMutableLiveData.setValue(new UIState.Fail<>("Email Invalid Format"));
+//            return;
+//        }
 
         User user = new User(firstName, lastName, middleName, password, email);
 
@@ -100,8 +104,9 @@ public class RegisterViewModel extends ViewModel {
                 Employee employee = new Employee(userId);
                 int employeeId = (int) appDao.insertEmployee(employee);
                 selectedFiles.forEach(selectedFile -> {
-                    saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, employeeId, context);
+                        saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, employeeId, context);
                 });
+                appDao.insertAccountReview(new AccountForReview(employeeId));
             } else if (roleKey.equals("Employer")) {
 
             }
@@ -132,10 +137,12 @@ public class RegisterViewModel extends ViewModel {
             if (inputStream != null) {
                 byte[] buffer = new byte[1024];
                 int bytesRead;
-                while ((bytesRead = inputStream.read()) != -1) {
+                while ((bytesRead = inputStream.read(buffer)) > 0) {
                     fos.write(buffer, 0, bytesRead);
                 }
             }
+            inputStream.close();
+            fos.close();
             appDao.insertCredential(new Credentials(empId, credentialFile.getPath()));
         } catch (IOException e) {
             throw new RuntimeException(e);

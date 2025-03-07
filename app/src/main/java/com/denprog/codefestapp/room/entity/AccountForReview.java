@@ -6,15 +6,17 @@ import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(foreignKeys = {@ForeignKey(
-        childColumns = "userId",
         entity = User.class,
+        childColumns = "userId",
         parentColumns = "userId"
 )})
-public class Employee {
+public class AccountForReview {
     @PrimaryKey(autoGenerate = true)
-    public int employeeId;
+    public int id;
     public int userId;
-    public Employee(int userId) {
+
+    public AccountForReview(int userId) {
         this.userId = userId;
     }
+
 }

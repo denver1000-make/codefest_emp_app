@@ -9,7 +9,10 @@ import android.widget.TextView;
 
 import com.denprog.codefestapp.destinations.admin.placeholder.PlaceholderContent.PlaceholderItem;
 import com.denprog.codefestapp.databinding.FragmentApplicationCardBinding;
+import com.denprog.codefestapp.room.entity.User;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,10 +21,11 @@ import java.util.List;
  */
 public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<ApplicationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private List<User> mValues = new ArrayList<>(Collections.emptyList());
+    private ApplicationItemInterface itemInterface;
 
-    public ApplicationRecyclerViewAdapter(List<PlaceholderItem> items) {
-        mValues = items;
+    public ApplicationRecyclerViewAdapter(ApplicationItemInterface itemInterface) {
+        this.itemInterface = itemInterface;
     }
 
     @Override
@@ -31,11 +35,24 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
 
     }
 
+    public void refreshList (List<User> userList) {
+        this.mValues.clear();
+        this.mValues.addAll(userList);
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mIdView.setText(mValues.get(position).userId + "");
+        String name = holder.mItem.firstName + " " + holder.mItem.middleName + " " + holder.mItem.lastName;
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                itemInterface.view(holder.mItem.userId);
+            }
+        });
+        holder.mContentView.setText(name);
     }
 
     @Override
@@ -46,7 +63,7 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
         public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public User mItem;
 
         public ViewHolder(FragmentApplicationCardBinding binding) {
             super(binding.getRoot());
@@ -59,4 +76,9 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
             return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
+
+    public interface ApplicationItemInterface {
+        void view(int userId);
+    }
+
 }

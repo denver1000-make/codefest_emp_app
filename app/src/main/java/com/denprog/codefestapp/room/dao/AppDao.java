@@ -4,10 +4,12 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
+import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.User;
 
 import java.util.List;
@@ -34,5 +36,19 @@ public interface AppDao {
     List<Employee> getEmployeeByUserId(int userId);
     @Query("SELECT * FROM Employer WHERE userId = :userId")
     List<Employer> getEmployerByUserId(int userId);
+    @Query("SELECT * FROM Credentials WHERE employeeId = :employeeId")
+    List<Credentials> getAllCredentialsByUserIdCredentials(int employeeId);
+    @Insert
+    void insertAccountReview(AccountForReview accountForReview);
+    @Query("SELECT User.userId, User.email, User.password, User.firstName, User.middleName, User.lastName FROM User INNER JOIN AccountForReview ON User.userId = AccountForReview.userId")
+    List<User> getAllAccountsForReview();
+    @Query("SELECT * FROM User WHERE User.userId = :userId")
+    List<User> getUserById(int userId);
+    @Query("DELETE FROM AccountForReview WHERE userId=:userId")
+    void removeUserFromReview(int userId);
+    @Insert
+    void insertReviewStatus(ReviewStatus reviewStatus);
 
+    @Query("SELECT * FROM AccountForReview WHERE userId=:userId")
+    List<AccountForReview> getUserReview(int userId);
 }

@@ -1,20 +1,23 @@
 package com.denprog.codefestapp.room.entity;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 @Entity(foreignKeys = {@ForeignKey(
-        childColumns = "userId",
         entity = User.class,
+        childColumns = "userId",
         parentColumns = "userId"
 )})
-public class Employee {
+public class ReviewStatus {
     @PrimaryKey(autoGenerate = true)
-    public int employeeId;
+    public int id;
+    public boolean statusOfAccount;
     public int userId;
-    public Employee(int userId) {
+
+    public ReviewStatus(boolean statusOfAccount, int userId) {
+        this.statusOfAccount = statusOfAccount;
         this.userId = userId;
     }
+
 }

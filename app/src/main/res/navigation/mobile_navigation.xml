@@ -3,4 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home"/>
+    app:startDestination="@id/adminHomeFragment">
+    <fragment
+        android:id="@+id/adminHomeFragment"
+        android:name="com.denprog.codefestapp.destinations.admin.AdminHomeFragment"
+        android:label="fragment_application_list"
+        tools:layout="@layout/fragment_application_list" >
+        <action
+            android:id="@+id/action_adminHomeFragment_to_viewUserFragment"
+            app:destination="@id/viewUserFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewUserFragment"
+        android:name="com.denprog.codefestapp.destinations.view_user.ViewUserFragment"
+        android:label="fragment_view_user"
+        tools:layout="@layout/fragment_view_user" >
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+    </fragment>
+</navigation>
