@@ -1,0 +1,156 @@
+package com.denprog.codefestapp.destinations.register;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
+
+import android.app.Activity;
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.webkit.MimeTypeMap;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Toast;
+
+import com.denprog.codefestapp.R;
+import com.denprog.codefestapp.databinding.FragmentRegisterBinding;
+import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.util.FileUtil;
+import com.denprog.codefestapp.util.SelectedFile;
+import com.denprog.codefestapp.util.UIState;
+
+import java.util.ArrayList;
+
+public class RegisterFragment extends Fragment {
+
+    private RegisterViewModel mViewModel;
+    private FragmentRegisterBinding binding;
+
+    FilesRecyclerViewAdapter adapter;
+
+    private ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+        @Override
+        public void onActivityResult(ActivityResult o) {
+            if (o.getResultCode() == Activity.RESULT_OK) {
+                if (o.getData() != null && o.getData().getData() != null) {
+                    Uri uri = o.getData().getData();
+                    String extension = FileUtil.getFilesExtension(requireContext(), uri);
+                    mViewModel
+                            .fileActionStateMutableLiveData
+                            .setValue(new RegisterViewModel.FileActionState.AddFile(
+                            new SelectedFile(uri, FileUtil.getFileName(requireContext(), uri))));
+                }
+            }
+        }
+    });
+
+    public static RegisterFragment newInstance() {
+        return new RegisterFragment();
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        this.binding = FragmentRegisterBinding.inflate(inflater);
+        return this.binding.getRoot();
+    }
+
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mViewModel = new ViewModelProvider(requireActivity()).get(RegisterViewModel.class);
+        this.adapter = new FilesRecyclerViewAdapter(index -> {
+            mViewModel.fileActionStateMutableLiveData.setValue(new RegisterViewModel.FileActionState.RemoveFile(index));
+        }, new ArrayList<>());
+
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+
+        this.binding.setViewModel(mViewModel);
+        this.binding.redirectLogin.setOnClickListener(view1 -> {
+            navController.navigate(RegisterFragmentDirections.actionAdminRegisterToLoginFragment());
+        });
+
+
+        binding.registerAction.setOnClickListener(view_ -> {
+            mViewModel.register(view_, adapter.getSelectedFiles());
+        });
+
+        ArrayList<String> roles = new ArrayList<>();
+        roles.add("Admin");
+        roles.add("Employee");
+        roles.add("Employer");
+
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, roles);
+
+        this.binding.roleSpinner.setAdapter(arrayAdapter);
+        this.binding.roleSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedRole = (String) adapterView.getSelectedItem();
+                mViewModel.roleMutableLiveData.setValue(selectedRole);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        this.binding.filesLoadedList.setLayoutManager(new LinearLayoutManager(requireContext()));
+        this.binding.filesLoadedList.setAdapter(adapter);
+
+        mViewModel.roleMutableLiveData.observe(getViewLifecycleOwner(), s -> {
+            if (s.equals("Admin")) {
+                this.binding.addFile.setVisibility(View.GONE);
+                this.binding.addFile.setOnClickListener(view_ -> {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.setType("*/*");
+                    launcher.launch(intent);
+                });
+                this.binding.filesLoadedList.setVisibility(View.GONE);
+            } else if (s.equals("Employee")) {
+                this.binding.addFile.setVisibility(View.VISIBLE);
+                this.binding.filesLoadedList.setVisibility(View.VISIBLE);
+            } else if (s.equals("Employer")) {
+                this.binding.addFile.setVisibility(View.VISIBLE);
+                this.binding.filesLoadedList.setVisibility(View.VISIBLE);
+            }
+        });
+
+        mViewModel.userMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
+            if (userUIState instanceof UIState.Success) {
+                Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+            } else if (userUIState instanceof UIState.Loading) {
+                Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show();
+            } else if (userUIState instanceof UIState.Fail) {
+                Toast.makeText(requireContext(), ((UIState.Fail<User>) userUIState).message, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        mViewModel.fileActionStateMutableLiveData.observe(getViewLifecycleOwner(), fileActionState -> {
+            if (fileActionState instanceof RegisterViewModel.FileActionState.AddFile) {
+                adapter.addFile(((RegisterViewModel.FileActionState.AddFile) fileActionState).data);
+            } else if (fileActionState instanceof RegisterViewModel.FileActionState.RemoveFile) {
+                adapter.fileDeleted(((RegisterViewModel.FileActionState.RemoveFile) fileActionState).data);
+            }
+        });
+    }
+}
