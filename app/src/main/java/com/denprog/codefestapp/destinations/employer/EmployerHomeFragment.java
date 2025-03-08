@@ -1,26 +1,20 @@
 package com.denprog.codefestapp.destinations.employer;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employer.addJobPositng.AddJobPostingFragment;
-import com.denprog.codefestapp.room.entity.JobPosting;
-
-import java.util.List;
 
 public class EmployerHomeFragment extends Fragment {
 

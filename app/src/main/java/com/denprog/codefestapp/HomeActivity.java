@@ -3,16 +3,15 @@ package com.denprog.codefestapp;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.denprog.codefestapp.databinding.ActivityHomeBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
 
@@ -27,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
+        this.viewModel = new ViewModelProvider(this).get(HomeActivityViewModel.class);
         setContentView(binding.getRoot());
         BottomNavigationView navView = findViewById(R.id.nav_view);
         Intent intent = getIntent();

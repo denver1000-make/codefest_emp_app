@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 
-import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -22,18 +21,14 @@ import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.User;
-import com.denprog.codefestapp.util.IDUtil;
 import com.denprog.codefestapp.util.UIState;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;

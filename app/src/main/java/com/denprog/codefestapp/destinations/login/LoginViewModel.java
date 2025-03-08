@@ -13,14 +13,10 @@ import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.User;
-import com.denprog.codefestapp.util.UIState;
 import com.denprog.codefestapp.util.Validator;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 

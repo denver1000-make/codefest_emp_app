@@ -9,7 +9,11 @@
         android:id="@+id/loginFragment"
         android:name="com.denprog.codefestapp.destinations.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_adminRegister"
+            app:destination="@id/adminRegister" />
+    </fragment>
     <fragment
         android:id="@+id/adminRegister"
         android:name="com.denprog.codefestapp.destinations.register.RegisterFragment"
