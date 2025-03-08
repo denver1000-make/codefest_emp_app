@@ -10,6 +10,8 @@ import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.util.UIState;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;
@@ -39,16 +41,12 @@ public class AddJobPostingViewModel extends ViewModel {
         String postingCategoryValue = postingCategory.get();
         float postingMaxSalaryValue = postingMaxSalary.get();
         float postingMinSalaryValue = postingMinSalary.get();
-
-
-
-        CompletableFuture.supplyAsync(new Supplier<Integer>() {
-            @Override
-            public Integer get() {
-                return Math.toIntExact(appDao.insertJobPosting(new JobPosting(postingNameValue, postingDescriptionValue, postingCategoryValue, postingMinSalaryValue, postingMaxSalaryValue, employerId)));
-            }
+        CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() -> Math.toIntExact(appDao.insertJobPosting(new JobPosting(postingNameValue, postingDescriptionValue, postingCategoryValue, postingMinSalaryValue, postingMaxSalaryValue, employerId))));
+        completableFuture.thenAcceptAsync(integer -> mutableLiveDataOfInsertedId.postValue(new UIState.Success<>(integer)));
+        completableFuture.exceptionally(throwable -> {
+            mutableLiveDataOfInsertedId.postValue(new UIState.Fail<>(throwable.getLocalizedMessage()));
+            return 0;
         });
     }
 
-    // TODO: Implement the ViewModel
 }

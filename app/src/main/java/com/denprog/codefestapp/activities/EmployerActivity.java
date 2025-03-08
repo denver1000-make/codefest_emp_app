@@ -18,6 +18,9 @@ import com.denprog.codefestapp.databinding.ActivityEmployerBinding;
 import com.denprog.codefestapp.destinations.employer.EmployerHomeViewModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class EmployerActivity extends AppCompatActivity {
 
     private ActivityEmployerBinding binding;

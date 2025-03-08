@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.denprog.codefestapp.R;
@@ -40,10 +41,14 @@ public class AddJobPostingFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireContext());
+        this.binding = FragmentAddJobPostingBinding.inflate(getLayoutInflater());
         alertDialog.setView(binding.getRoot());
         this.mViewModel = new ViewModelProvider(requireActivity()).get(AddJobPostingViewModel.class);
         this.employerHomeViewModel = new ViewModelProvider(requireActivity()).get(EmployerHomeViewModel.class);
         binding.setViewModel(mViewModel);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, AddJobPostingFragment.listOfCategories);
+        binding.categorySpinner.setAdapter(adapter);
 
         binding.addPostingAction.setOnClickListener(view -> {
             Integer empId = employerHomeViewModel.empIdMutableLiveData.getValue();
@@ -52,20 +57,30 @@ public class AddJobPostingFragment extends DialogFragment {
             }
         });
 
-        mViewModel.mutableLiveDataOfInsertedId.observe(getViewLifecycleOwner(), new Observer<UIState<Integer>>() {
-            @Override
-            public void onChanged(UIState<Integer> integerUIState) {
-                if (integerUIState instanceof UIState.Success) {
-                    Bundle bundle = new Bundle();
-                    bundle.putInt(AddJobPostingFragment.bundleOfIntegerId, ((UIState.Success<Integer>) integerUIState).data);
-                    getParentFragmentManager().setFragmentResult(AddJobPostingFragment.resultKey, bundle);
-                } else if (integerUIState instanceof UIState.Fail) {
-                    Toast.makeText(requireContext(), ((UIState.Fail<Integer>) integerUIState).message, Toast.LENGTH_SHORT).show();
-                }
+        mViewModel.mutableLiveDataOfInsertedId.observe(requireActivity(), integerUIState -> {
+            if (integerUIState instanceof UIState.Success) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(AddJobPostingFragment.bundleOfIntegerId, ((UIState.Success<Integer>) integerUIState).data);
+                getParentFragmentManager().setFragmentResult(AddJobPostingFragment.resultKey, bundle);
+                clearData();
+                dismiss();
+            } else if (integerUIState instanceof UIState.Fail) {
+                clearData();
+                dismiss();
+                Toast.makeText(requireContext(), ((UIState.Fail<Integer>) integerUIState).message, Toast.LENGTH_SHORT).show();
             }
         });
 
         return alertDialog.create();
+    }
+
+    public void clearData() {
+        mViewModel.postingCategory.set("");
+        mViewModel.postingName.set("");
+        mViewModel.postingDescription.set("");
+        mViewModel.postingMaxSalary.set(0.0f);
+        mViewModel.postingMinSalary.set(0.0f);
+        mViewModel.mutableLiveDataOfInsertedId.setValue(null);
     }
 
 }

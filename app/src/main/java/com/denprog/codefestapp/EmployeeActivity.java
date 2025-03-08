@@ -11,6 +11,9 @@ import androidx.navigation.ui.NavigationUI;
 import com.denprog.codefestapp.databinding.ActivityEmployeeBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import dagger.hilt.android.AndroidEntryPoint;
+
+@AndroidEntryPoint
 public class EmployeeActivity extends AppCompatActivity {
 
     private ActivityEmployeeBinding binding;

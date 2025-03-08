@@ -30,7 +30,7 @@ public class ProfileFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+        mViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
         mViewModel.mutableUserState.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Success) {
                 binding.setUser(((UIState.Success<User>) userUIState).data);

@@ -2,8 +2,11 @@ package com.denprog.codefestapp.bindingAdapter;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.AbsListView;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.Spinner;
 
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
@@ -27,6 +30,7 @@ public class BindingAdapter {
         }
     }
 
+    @androidx.databinding.BindingAdapter("textAttrChanged")
     public static void setListener(EditText editText, final InverseBindingListener listener) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -44,9 +48,37 @@ public class BindingAdapter {
 
             }
         });
-
     }
 
+    @androidx.databinding.BindingAdapter("app:selectedItem")
+    public static void setItem(Spinner spinner, String value) {
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).equals(value)) {
+                spinner.setSelection(i);
+            }
+        }
+    }
+
+
+    @androidx.databinding.BindingAdapter("onSelectedItemListener")
+    public static void setListener(Spinner spinner, final InverseBindingListener listener) {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                listener.onChange();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+    }
+
+    @InverseBindingAdapter(attribute = "selectedItem", event = "onSelectedItemListener")
+    public static String getItem(Spinner spinner) {
+        return spinner.getSelectedItem().toString();
+    }
 
 
 }

@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ public class EmployerHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         this.binding = FragmentEmployerHomeBinding.inflate(inflater);
+        adapter = new JobPostingRecyclerViewAdapter();
         binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.list.setAdapter(adapter);
         return binding.getRoot();
@@ -35,6 +37,7 @@ public class EmployerHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.viewModel = new ViewModelProvider(requireActivity()).get(EmployerHomeViewModel.class);
         viewModel.jobPostingMutableLiveData.observe(getViewLifecycleOwner(), jobPostingList -> {
             adapter.refreshList(jobPostingList);
         });
