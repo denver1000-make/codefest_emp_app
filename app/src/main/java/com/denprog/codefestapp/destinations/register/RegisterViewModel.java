@@ -16,6 +16,7 @@ import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
+import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.FileUtil;
 import com.denprog.codefestapp.util.IDUtil;
@@ -104,11 +105,16 @@ public class RegisterViewModel extends ViewModel {
                 Employee employee = new Employee(userId);
                 int employeeId = (int) appDao.insertEmployee(employee);
                 selectedFiles.forEach(selectedFile -> {
-                        saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, employeeId, context);
+                        saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, userId, context);
                 });
-                appDao.insertAccountReview(new AccountForReview(employeeId));
+                appDao.insertAccountReview(new AccountForReview(userId));
             } else if (roleKey.equals("Employer")) {
-
+                Employer employer = new Employer(userId);
+                int employerId = (int) appDao.insertEmployer(employer);
+                selectedFiles.forEach(selectedFile -> {
+                    saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, userId, context);
+                });
+                appDao.insertAccountReview(new AccountForReview(userId));
             }
             return user;
         }).thenAccept(unused -> {

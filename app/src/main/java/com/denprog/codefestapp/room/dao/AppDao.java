@@ -21,7 +21,7 @@ public interface AppDao {
     @Insert
     long insertEmployee(Employee employee);
     @Insert
-    void insertEmployer(Employer employer);
+    long insertEmployer(Employer employer);
     @Insert
     void insertAdmin(Admin admin);
     @Insert
@@ -36,8 +36,8 @@ public interface AppDao {
     List<Employee> getEmployeeByUserId(int userId);
     @Query("SELECT * FROM Employer WHERE userId = :userId")
     List<Employer> getEmployerByUserId(int userId);
-    @Query("SELECT * FROM Credentials WHERE employeeId = :employeeId")
-    List<Credentials> getAllCredentialsByUserIdCredentials(int employeeId);
+    @Query("SELECT * FROM Credentials WHERE userId = :userId")
+    List<Credentials> getAllCredentialsByUserIdCredentials(int userId);
     @Insert
     void insertAccountReview(AccountForReview accountForReview);
     @Query("SELECT User.userId, User.email, User.password, User.firstName, User.middleName, User.lastName FROM User INNER JOIN AccountForReview ON User.userId = AccountForReview.userId")
