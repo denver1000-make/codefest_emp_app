@@ -29,7 +29,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@{String.valueOf(user.userId)}" />
+                    android:text="@{user.userId}" />
 
                 <TextView
                     android:id="@+id/textView5"

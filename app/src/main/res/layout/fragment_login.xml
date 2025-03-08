@@ -121,9 +121,10 @@
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/login_action"
-                    android:layout_width="match_parent"
+                    android:layout_width="250dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
+                    android:layout_gravity="center"
                     android:background="@drawable/button_design1"
                     android:fontFamily="@font/montserrat_bold"
                     android:onClick="@{v -> viewModel.login(v)}"
