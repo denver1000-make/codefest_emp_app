@@ -73,6 +73,8 @@
                         android:drawableStart="@drawable/baseline_email_24"
                         android:drawablePadding="10dp"
                         android:hint="Email"
+                        android:inputType="textEmailAddress"
+                        android:fontFamily="@font/montserrat"
                         android:maxLines="1"
                         android:text="@={viewModel.emailField}" />
                 </com.google.android.material.textfield.TextInputLayout>
@@ -89,6 +91,8 @@
                         android:layout_height="wrap_content"
                         android:drawableStart="@drawable/baseline_lock_24"
                         android:drawablePadding="10dp"
+                        android:fontFamily="@font/montserrat"
+                        android:inputType="textPassword"
                         android:hint="Password"
                         android:maxLines="1"
                         android:text="@={viewModel.passwordField}" />
@@ -104,6 +108,32 @@
                     android:onClick="@{v -> viewModel.login(v)}"
                     android:text="Login"
                     android:textColor="@color/white" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="10dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Don't have an account?"
+                        android:layout_marginEnd="10dp"
+                        android:fontFamily="@font/montserrat"
+
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat"
+                        android:textColor="@color/sti_blue"
+                        android:text="Sign up here" />
+
+
+                </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>
