@@ -14,7 +14,7 @@ import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.User;
 
-@Database(version = 3, entities = {
+@Database(version = 4, entities = {
         User.class,
         Employer.class,
         Employee.class,

@@ -17,14 +17,16 @@ public class JobPosting {
     public String postingName;
     public String postingDescription;
     public String postingCategory;
-    public float salary;
+    public float maxSalary;
+    public float minSalary;
     public int employerId;
 
-    public JobPosting(String postingName, String postingDescription, String postingCategory, float salary, int employerId) {
+    public JobPosting(String postingName, String postingDescription, String postingCategory, float minSalary, float maxSalary, int employerId) {
         this.postingName = postingName;
         this.postingDescription = postingDescription;
         this.postingCategory = postingCategory;
-        this.salary = salary;
+        this.maxSalary = maxSalary;
+        this.minSalary = minSalary;
         this.employerId = employerId;
     }
 }

@@ -58,17 +58,17 @@ public class LoginViewModel extends ViewModel {
         }).thenAcceptAsync(user -> {
             List<Admin> admin = appDao.getAdminByUserId(user.userId);
             if (!admin.isEmpty()) {
-                loginResultState.postValue(new RoleState.AdminState(user));
+                loginResultState.postValue(new RoleState.AdminState(user, admin.get(0).adminId));
                 return;
             }
             List<Employee> employees = appDao.getEmployeeByUserId(user.userId);
             if (!employees.isEmpty()) {
-                loginResultState.postValue(new RoleState.EmployeeState(user));
+                loginResultState.postValue(new RoleState.EmployeeState(user, employees.get(0).employeeId));
                 return;
             }
             List<Employer> employers = appDao.getEmployerByUserId(user.userId);
             if (!employers.isEmpty()) {
-                loginResultState.postValue(new RoleState.EmployerState(user));
+                loginResultState.postValue(new RoleState.EmployerState(user, employers.get(0).employerId));
                 return;
             }
             loginResultState.postValue(new RoleState.Fail("No Role was assigned to the user."));
@@ -95,22 +95,31 @@ public class LoginViewModel extends ViewModel {
         public static final class AdminState extends RoleState {
 
             public User user;
-            public AdminState(User user) {
+            public int adminId;
+
+            public AdminState(User user, int adminId) {
                 this.user = user;
+                this.adminId = adminId;
             }
         }
 
         public static final class EmployeeState extends RoleState {
             public User user;
-            public EmployeeState(User user) {
+            public int employeeId;
+
+            public EmployeeState(User user, int employeeId) {
                 this.user = user;
+                this.employeeId = employeeId;
             }
         }
 
         public static final class EmployerState extends RoleState {
             public User user;
-            public EmployerState(User user) {
+            public int employerId;
+
+            public EmployerState(User user, int employerId) {
                 this.user = user;
+                this.employerId = employerId;
             }
         }
 

@@ -21,6 +21,10 @@
         android:theme="@style/Theme.CodefestApp"
         tools:targetApi="31">
         <activity
+            android:name=".activities.EmployerActivity"
+            android:exported="false"
+            android:label="@string/title_activity_employer" />
+        <activity
             android:name=".EmployeeActivity"
             android:exported="false"
             android:label="@string/title_activity_employee" />

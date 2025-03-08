@@ -9,6 +9,7 @@ import com.denprog.codefestapp.room.entity.Admin;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
+import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.User;
 
@@ -48,7 +49,11 @@ public interface AppDao {
     void removeUserFromReview(int userId);
     @Insert
     void insertReviewStatus(ReviewStatus reviewStatus);
-
     @Query("SELECT * FROM AccountForReview WHERE userId=:userId")
     List<AccountForReview> getUserReview(int userId);
+    @Query("SELECT * FROM JobPosting")
+    List<JobPosting> getAllJobPosting();
+
+    @Insert
+    long insertJobPosting(JobPosting jobPosting);
 }
