@@ -3,22 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_margin="20dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="20dp"
     tools:context=".destinations.register.dialog.AttachFileDialogFragment">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="10dp"
         android:orientation="vertical">
 
         <ListView
             android:layout_width="match_parent"
+            android:layout_marginTop="20dp"
             android:layout_height="70dp" />
 
-        <Button
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/attachAFile"
             android:layout_width="match_parent"
+            android:background="@drawable/button_design1"
+            android:fontFamily="@font/montserrat_bold"
+            android:textColor="@color/white"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
             android:text="Attach a File" />
     </LinearLayout>
 
