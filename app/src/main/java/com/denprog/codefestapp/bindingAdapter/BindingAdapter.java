@@ -2,7 +2,6 @@ package com.denprog.codefestapp.bindingAdapter;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.AbsListView;
 import android.widget.EditText;
 
 import androidx.databinding.InverseBindingAdapter;

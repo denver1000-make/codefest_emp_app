@@ -2,8 +2,6 @@ package com.denprog.codefestapp;
 
 import android.os.Bundle;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -11,6 +9,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.denprog.codefestapp.databinding.ActivityEmployeeBinding;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class EmployeeActivity extends AppCompatActivity {
 

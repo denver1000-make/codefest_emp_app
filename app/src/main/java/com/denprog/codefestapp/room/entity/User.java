@@ -1,6 +1,5 @@
 package com.denprog.codefestapp.room.entity;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 

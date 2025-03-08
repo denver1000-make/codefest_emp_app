@@ -12,8 +12,6 @@ import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.UIState;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 

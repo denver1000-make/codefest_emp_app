@@ -5,7 +5,6 @@ import android.content.Context;
 import androidx.room.Room;
 
 import com.denprog.codefestapp.room.AppDatabase;
-import com.denprog.codefestapp.room.dao.AppDao;
 
 import javax.inject.Singleton;
 

@@ -4,11 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 
-import androidx.collection.MutableObjectList;
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import androidx.room.Room;
 
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
@@ -22,23 +20,15 @@ import com.denprog.codefestapp.util.FileUtil;
 import com.denprog.codefestapp.util.IDUtil;
 import com.denprog.codefestapp.util.SelectedFile;
 import com.denprog.codefestapp.util.UIState;
-import com.denprog.codefestapp.util.Validator;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpCookie;
-import java.nio.channels.FileChannel;
-import java.sql.Blob;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
