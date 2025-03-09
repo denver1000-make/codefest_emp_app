@@ -5,4 +5,5 @@
     <color name="sti_blue">#0050AD</color>
     <color name="sti_yellow">#FFED40</color>
     <color name="gray">#929292</color>
+    <color name="transparent">#00FFFFFF</color>
 </resources>

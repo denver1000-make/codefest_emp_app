@@ -35,6 +35,10 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:layout_weight="1"
                     android:text="STI JOB PORTAL"
+                    android:shadowColor="@color/sti_yellow"
+                    android:shadowDx="3"
+                    android:shadowDy="5"
+                    android:shadowRadius="3"
                     android:textColor="@color/white"
                     android:textSize="25sp"
                     android:layout_gravity="center_vertical"
@@ -74,6 +78,10 @@
                         android:fontFamily="@font/montserrat_bold"
                         android:text="Registration Form"
                         android:textAlignment="center"
+                        android:shadowColor="@color/sti_yellow"
+                        android:shadowRadius="5"
+                        android:shadowDy="3"
+                        android:shadowDx="3"
                         android:layout_marginBottom="20dp"
                         android:textColor="@color/sti_blue"
                         android:textSize="30sp"
@@ -127,17 +135,11 @@
                     </LinearLayout>
 
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
 
-                    android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
                         android:layout_height="match_parent">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -156,9 +158,8 @@
 
 
                     <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_marginStart="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_marginTop="10dp"
                         android:layout_height="match_parent">
 
                         <com.google.android.material.textfield.TextInputEditText
@@ -174,7 +175,6 @@
                             android:text="@={viewModel.emailField}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -241,11 +241,21 @@
                         android:text="Attach File"
                         android:drawableEnd="@drawable/baseline_attach_file_24" />
 
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Login as:"
+                        android:fontFamily="@font/montserrat"
+                        android:textSize="17sp"
+                        />
+
                     <Spinner
                         android:id="@+id/role_spinner"
                         android:layout_width="match_parent"
                         android:layout_marginTop="10dp"
-                        android:padding="10dp"
+                        android:padding="15dp"
+                        android:spinnerMode="dialog"
+                        android:background="@drawable/border_design1"
                         android:layout_height="wrap_content" />
 
                     <androidx.appcompat.widget.AppCompatButton
@@ -279,7 +289,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/montserrat"
                             android:textColor="@color/sti_blue"
-                            android:text="Sign in here" />
+                            android:text="Login here" />
 
                     </LinearLayout>
                 </LinearLayout>
