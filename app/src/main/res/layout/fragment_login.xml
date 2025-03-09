@@ -55,49 +55,47 @@
 
         </Toolbar>
 
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:gravity="center"
+            android:layout_margin="20dp"
+            android:orientation="vertical"
             app:layout_constraintBottom_toTopOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/toolbar"
+            app:layout_constraintVertical_bias="0.824">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="Be Future-Ready."
-                android:textColor="@color/sti_blue"
-                android:textSize="40sp"
+                android:letterSpacing="0.05"
                 android:shadowColor="#FFEB3B"
                 android:shadowDx="5"
                 android:shadowDy="5"
                 android:shadowRadius="2"
-                android:letterSpacing="0.05" />
-
+                android:text="Be Future-Ready."
+                android:textColor="@color/sti_blue"
+                android:textSize="37sp" />
 
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_bold"
-                android:text="Be STI."
-                android:textColor="@color/sti_yellow"
-                android:textSize="40sp"
+                android:letterSpacing="0.1"
                 android:shadowColor="@color/sti_blue"
                 android:shadowDx="10"
                 android:shadowDy="5"
                 android:shadowRadius="2"
-                android:letterSpacing="0.1"/>
+                android:text="Be STI."
+                android:textColor="@color/sti_yellow"
+                android:textSize="35sp" />
         </LinearLayout>
-
-
-
-
-
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
@@ -106,7 +104,6 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             app:cardCornerRadius="10dp"
-
             app:cardElevation="20dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -118,7 +115,12 @@
                 android:layout_height="match_parent"
                 android:layout_margin="10dp"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:paddingBottom="50dp"
+                android:paddingTop="50dp"
+                android:paddingStart="20dp"
+
+
+                >
 
                 <TextView
                     android:layout_width="match_parent"
