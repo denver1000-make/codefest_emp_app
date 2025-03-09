@@ -1,4 +1,4 @@
-package com.denprog.codefestapp.destinations.view_user;
+package com.denprog.codefestapp.destinations.admin.view_user;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,8 +10,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
+import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentViewUserBinding;
+import com.denprog.codefestapp.destinations.admin.AdminHomeViewModel;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.UIState;
 
@@ -19,6 +23,7 @@ public class ViewUserFragment extends Fragment {
 
     private ViewUserViewModel mViewModel;
     private FragmentViewUserBinding binding;
+    private AdminHomeViewModel adminHomeViewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -31,8 +36,10 @@ public class ViewUserFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mViewModel = new ViewModelProvider(requireActivity()).get(ViewUserViewModel.class);
+        this.adminHomeViewModel = new ViewModelProvider(requireActivity()).get(AdminHomeViewModel.class);
         int userId = ViewUserFragmentArgs.fromBundle(getArguments()).getUserId();
         mViewModel.loadUser(userId);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_home);
         mViewModel.userToViewMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Fail) {
                 Toast.makeText(requireContext(), ((UIState.Fail<User>) userUIState).message, Toast.LENGTH_SHORT).show();
@@ -46,6 +53,8 @@ public class ViewUserFragment extends Fragment {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                    navController.navigate(ViewUserFragmentDirections.actionViewUserFragmentToAdminHomeFragment(userId, true));
+                    adminHomeViewModel.userReviewStatusMutableLiveData.setValue(new AdminHomeViewModel.UserReviewStatus(userId, true));
                 }
 
                 @Override
@@ -60,6 +69,9 @@ public class ViewUserFragment extends Fragment {
                 @Override
                 public void onSuccess() {
                     Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
+                    navController.navigate(ViewUserFragmentDirections.actionViewUserFragmentToAdminHomeFragment(userId, false));
+                    adminHomeViewModel.userReviewStatusMutableLiveData.setValue(new AdminHomeViewModel.UserReviewStatus(userId, false));
+
                 }
 
                 @Override

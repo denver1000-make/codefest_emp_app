@@ -20,6 +20,7 @@ import com.denprog.codefestapp.util.FileUtil;
 import com.denprog.codefestapp.util.IDUtil;
 import com.denprog.codefestapp.util.SelectedFile;
 import com.denprog.codefestapp.util.UIState;
+import com.denprog.codefestapp.util.Validator;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,20 +65,20 @@ public class RegisterViewModel extends ViewModel {
         String password = confirmPasswordField.get();
         String confirmPassword = confirmPasswordField.get();
 
-//        if (Validator.areInputNull(firstName, middleName, lastName, email, password, confirmPassword)) {
-//            userMutableLiveData.setValue(new UIState.Fail<>("Empty Field"));
-//            return;
-//        }
-//
-//        if (!password.equals(confirmPassword)) {
-//            userMutableLiveData.setValue(new UIState.Fail<>("Password Mismatch"));
-//            return;
-//        }
-//
-//        if (!Validator.isEmailValid(email)) {
-//            userMutableLiveData.setValue(new UIState.Fail<>("Email Invalid Format"));
-//            return;
-//        }
+        if (Validator.areInputNull(firstName, middleName, lastName, email, password, confirmPassword)) {
+            userMutableLiveData.setValue(new UIState.Fail<>("Empty Field"));
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            userMutableLiveData.setValue(new UIState.Fail<>("Password Mismatch"));
+            return;
+        }
+
+        if (!Validator.isEmailValid(email)) {
+            userMutableLiveData.setValue(new UIState.Fail<>("Email Invalid Format"));
+            return;
+        }
 
         User user = new User(firstName, lastName, middleName, password, email);
 
@@ -160,8 +161,5 @@ public class RegisterViewModel extends ViewModel {
                 this.data = data;
             }
         }
-
-
-
     }
 }

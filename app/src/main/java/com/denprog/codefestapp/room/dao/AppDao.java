@@ -2,6 +2,7 @@ package com.denprog.codefestapp.room.dao;
 
 import androidx.room.Dao;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
 import com.denprog.codefestapp.room.entity.AccountForReview;
@@ -11,6 +12,7 @@ import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
+import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
 
 import java.util.List;
@@ -53,7 +55,10 @@ public interface AppDao {
     List<AccountForReview> getUserReview(int userId);
     @Query("SELECT * FROM JobPosting")
     List<JobPosting> getAllJobPosting();
-
     @Insert
     long insertJobPosting(JobPosting jobPosting);
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertSave(SavedUserCredentials savedUserCredentials);
+    @Query("SELECT * FROM SavedUserCredentials")
+    List<SavedUserCredentials> getAllSavedUserCredentials();
 }

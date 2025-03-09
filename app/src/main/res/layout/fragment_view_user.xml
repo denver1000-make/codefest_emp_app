@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".destinations.view_user.ViewUserFragment">
+        tools:context=".destinations.admin.view_user.ViewUserFragment">
 
         <Toolbar
             android:id="@+id/toolbar"

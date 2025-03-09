@@ -29,7 +29,6 @@ public class EmployeeActivity extends AppCompatActivity {
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder()
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_employee);
-        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 

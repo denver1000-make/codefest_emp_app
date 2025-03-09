@@ -1,6 +1,8 @@
 package com.denprog.codefestapp.destinations.register;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,8 +38,9 @@ public class RegisterFragment extends Fragment {
 
     private RegisterViewModel mViewModel;
     private FragmentRegisterBinding binding;
-
     FilesRecyclerViewAdapter adapter;
+    AlertDialog alertDialog;
+    NavController navController;
 
     private ActivityResultLauncher<Intent> launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
         @Override
@@ -63,6 +66,20 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         this.binding = FragmentRegisterBinding.inflate(inflater);
+        this.alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Do you want to login your account.")
+                .setPositiveButton("Ok", (dialogInterface, i) -> {
+                    UIState<User> uiState = mViewModel.userMutableLiveData.getValue();
+                    if (uiState instanceof UIState.Success) {
+                        RegisterFragmentDirections.ActionAdminRegisterToLoginFragment fragmentDirections = RegisterFragmentDirections.actionAdminRegisterToLoginFragment(((UIState.Success<User>) uiState).data.email, ((UIState.Success<User>) uiState).data.password);
+                        fragmentDirections.setPerformAutoLogin(true);
+                        navController.navigate(fragmentDirections);
+                        dialogInterface.dismiss();
+                    }
+                }).setNegativeButton("No", (dialogInterface, i) -> {
+                    navController.navigate(RegisterFragmentDirections.actionAdminRegisterToLoginFragment(null, null));
+                    dialogInterface.dismiss();
+                }).create();
         return this.binding.getRoot();
     }
 
@@ -75,11 +92,11 @@ public class RegisterFragment extends Fragment {
             mViewModel.fileActionStateMutableLiveData.setValue(new RegisterViewModel.FileActionState.RemoveFile(index));
         }, new ArrayList<>());
 
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+        this.navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
 
         this.binding.setViewModel(mViewModel);
         this.binding.redirectLogin.setOnClickListener(view1 -> {
-            navController.navigate(RegisterFragmentDirections.actionAdminRegisterToLoginFragment());
+            navController.navigate(RegisterFragmentDirections.actionAdminRegisterToLoginFragment(null, null));
         });
 
 
@@ -111,14 +128,15 @@ public class RegisterFragment extends Fragment {
         this.binding.filesLoadedList.setLayoutManager(new LinearLayoutManager(requireContext()));
         this.binding.filesLoadedList.setAdapter(adapter);
 
+        this.binding.addFile.setOnClickListener(view_ -> {
+            Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            intent.setType("*/*");
+            launcher.launch(intent);
+        });
+
         mViewModel.roleMutableLiveData.observe(getViewLifecycleOwner(), s -> {
             if (s.equals("Admin")) {
-                this.binding.addFile.setVisibility(View.GONE);
-                this.binding.addFile.setOnClickListener(view_ -> {
-                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    intent.setType("*/*");
-                    launcher.launch(intent);
-                });
+                                                                                                                                                                                                                                                                                                                                                                                                                           this.binding.addFile.setVisibility(View.GONE);
                 this.binding.filesLoadedList.setVisibility(View.GONE);
             } else if (s.equals("Employee")) {
                 this.binding.addFile.setVisibility(View.VISIBLE);
@@ -129,8 +147,9 @@ public class RegisterFragment extends Fragment {
             }
         });
 
-        mViewModel.userMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
+                   mViewModel.userMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Success) {
+                this.alertDialog.show();
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();
             } else if (userUIState instanceof UIState.Loading) {
                 Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show();
@@ -146,5 +165,10 @@ public class RegisterFragment extends Fragment {
                 adapter.fileDeleted(((RegisterViewModel.FileActionState.RemoveFile) fileActionState).data);
             }
         });
+    }
+
+    public void resetState() {
+        mViewModel.userMutableLiveData.setValue(null);
+        mViewModel.roleMutableLiveData.setValue(null);
     }
 }

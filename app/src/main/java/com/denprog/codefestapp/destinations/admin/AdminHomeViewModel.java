@@ -21,6 +21,7 @@ public class AdminHomeViewModel extends ViewModel {
     AppDao appDao;
 
     MutableLiveData<List<User>> credentialsList = new MutableLiveData<>(Collections.emptyList());
+    public MutableLiveData<UserReviewStatus> userReviewStatusMutableLiveData = new MutableLiveData<>();
 
     @Inject
     public AdminHomeViewModel(AppDatabase appDatabase) {
@@ -29,6 +30,16 @@ public class AdminHomeViewModel extends ViewModel {
 
     public void getAccountsToReview() {
         CompletableFuture.supplyAsync(() -> appDao.getAllAccountsForReview()).thenAcceptAsync(users -> credentialsList.postValue(users));
+    }
+
+    public static final class UserReviewStatus {
+        public int userId;
+        public boolean reviewStatus;
+
+        public UserReviewStatus(int userId, boolean reviewStatus) {
+            this.userId = userId;
+            this.reviewStatus = reviewStatus;
+        }
     }
 
 }

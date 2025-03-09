@@ -1,22 +1,31 @@
 package com.denprog.codefestapp.destinations.login;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.denprog.codefestapp.destinations.dummy.DummyViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
+import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
+import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.Validator;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
@@ -27,7 +36,7 @@ public class LoginViewModel extends ViewModel {
     public ObservableField<String> emailField = new ObservableField<>("");
     public ObservableField<String> passwordField = new ObservableField<>("");
     public MutableLiveData<RoleState> loginResultState = new MutableLiveData<>();
-
+    private Handler handler = new Handler(Looper.getMainLooper());
     private AppDao appDao;
 
     @Inject
@@ -35,7 +44,7 @@ public class LoginViewModel extends ViewModel {
         this.appDao = appDatabase.getAppDao() ;
     }
 
-    public void login(View v) {
+    public void login() {
         String email = emailField.get();
         String password = passwordField.get();
 
@@ -44,88 +53,110 @@ public class LoginViewModel extends ViewModel {
             return;
         }
 
-        CompletableFuture.supplyAsync(() -> {
+        CompletableFuture<User> completableFuture = CompletableFuture.supplyAsync(() -> {
             List<User> users = appDao.getUserByEmailAndPassword(email, password);
             if (!users.isEmpty()) {
                 return users.get(0);
             } else {
                 throw new RuntimeException("User Does Not Exist");
             }
-        }).thenAcceptAsync(user -> {
-            List<Admin> admin = appDao.getAdminByUserId(user.userId);
-            if (!admin.isEmpty()) {
-                loginResultState.postValue(new RoleState.AdminState(user, admin.get(0).adminId));
-                return;
+        });
+
+        completableFuture.thenAcceptAsync(user -> {
+            if (checkIfUserIsUnderReviewSync(user.userId)) {
+                loginResultState.setValue(new RoleState.Fail("Account is under review"));
+            } else {
+                loginResultState.postValue(new RoleState.PromptSaveUser(user));
             }
-            List<Employee> employees = appDao.getEmployeeByUserId(user.userId);
-            if (!employees.isEmpty()) {
-                loginResultState.postValue(new RoleState.EmployeeState(user, employees.get(0).employeeId));
-                return;
-            }
-            List<Employer> employers = appDao.getEmployerByUserId(user.userId);
-            if (!employers.isEmpty()) {
-                loginResultState.postValue(new RoleState.EmployerState(user, employers.get(0).employerId));
-                return;
-            }
-            loginResultState.postValue(new RoleState.Fail("No Role was assigned to the user."));
-        }).exceptionally(throwable -> {
+        });
+
+        completableFuture.exceptionally(throwable -> {
             loginResultState.postValue(new RoleState.Fail(throwable.getLocalizedMessage()));
             return null;
         });
     }
 
-    public void checkIfUserIsUnderReview (int userId, OnUserReviewStatus onUserReviewStatus) {
-        CompletableFuture<List<AccountForReview>> completableFuture = CompletableFuture.supplyAsync(() -> appDao.getUserReview(userId));
+    private boolean checkIfUserIsUnderReviewSync (int userId) {
+        List<AccountForReview> accountForReviews = appDao.getUserReview(userId);
+        return !accountForReviews.isEmpty();
+    }
 
-        completableFuture.thenAccept(accountForReviews -> {
-            if (accountForReviews.isEmpty()) {
-                onUserReviewStatus.onUserIsNotUnderReview();
-            } else {
-                onUserReviewStatus.onUserIsUnderReview();
+    public void saveUserCredential(int userId, OnOperationSuccessful<Void> onOperationSuccessful) {
+        CompletableFuture<Void> future = CompletableFuture.supplyAsync(() -> {
+            appDao.insertSave(new SavedUserCredentials(1, userId));
+            return null;
+        });
+
+        future.thenAccept(unused -> handler.post(() -> onOperationSuccessful.onSuccess(null)));
+
+        future.exceptionally(throwable -> {
+            onOperationSuccessful.onError(throwable.getLocalizedMessage());
+            return null;
+        });
+    }
+
+    public void performRoleBasedRedirect (User user, DummyViewModel.OnUserRoleLoaded onUserRoleLoaded) {
+        loginResultState.setValue(new RoleState.Loading());
+        CompletableFuture.supplyAsync((Supplier<Void>) () -> {
+            List<Admin> admin = appDao.getAdminByUserId(user.userId);
+            if (!admin.isEmpty()) {
+                onUserRoleLoaded.admin(user, admin.get(0).adminId);
+                return null;
             }
+            List<Employee> employees = appDao.getEmployeeByUserId(user.userId);
+            if (!employees.isEmpty()) {
+                onUserRoleLoaded.employee(user, employees.get(0).employeeId);
+                return null;
+            }
+            List<Employer> employers = appDao.getEmployerByUserId(user.userId);
+            if (!employers.isEmpty()) {
+                onUserRoleLoaded.employer(user, employers.get(0).employerId);
+                return null;
+            }
+            onUserRoleLoaded.noRoleAttached();
+            return null;
         });
     }
 
     public static class RoleState {
+        public User user;
 
-        public static final class AdminState extends RoleState {
+        public RoleState(User user) {
+            this.user = user;
+        }
 
-            public User user;
-            public int adminId;
+        public static final class AutoLoginAfterRegistration extends RoleState{
 
-            public AdminState(User user, int adminId) {
-                this.user = user;
-                this.adminId = adminId;
+            public AutoLoginAfterRegistration() {
+                super(null);
             }
         }
 
-        public static final class EmployeeState extends RoleState {
-            public User user;
-            public int employeeId;
+        public static final class AttemptRedirect extends RoleState {
 
-            public EmployeeState(User user, int employeeId) {
-                this.user = user;
-                this.employeeId = employeeId;
-            }
-        }
-
-        public static final class EmployerState extends RoleState {
-            public User user;
-            public int employerId;
-
-            public EmployerState(User user, int employerId) {
-                this.user = user;
-                this.employerId = employerId;
+            public AttemptRedirect(User user) {
+                super(user);
             }
         }
 
         public static final class Loading extends RoleState {
 
+            public Loading() {
+                super(null);
+            }
+
+        }
+
+        public static final class PromptSaveUser extends RoleState{
+            public PromptSaveUser(User user) {
+                super(user);
+            }
         }
 
         public static final class Fail extends RoleState {
             String message;
             public Fail(String message) {
+                super(null);
                 this.message = message;
             }
         }

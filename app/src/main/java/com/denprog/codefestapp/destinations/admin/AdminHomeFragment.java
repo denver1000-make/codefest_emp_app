@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,6 +29,7 @@ public class AdminHomeFragment extends Fragment {
         RecyclerView rcv = binding.getRoot();
         rcv.setLayoutManager(new LinearLayoutManager(requireContext()));
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_home);
+
         this.adapter = new ApplicationRecyclerViewAdapter((int userId) -> {
             navController.navigate(AdminHomeFragmentDirections.actionAdminHomeFragmentToViewUserFragment(userId));
         });
@@ -42,6 +44,10 @@ public class AdminHomeFragment extends Fragment {
         viewModel.getAccountsToReview();
         viewModel.credentialsList.observe(getViewLifecycleOwner(), users -> {
             adapter.refreshList(users);
+        });
+
+        viewModel.userReviewStatusMutableLiveData.observe(getViewLifecycleOwner(), userReviewStatus -> {
+            viewModel.getAccountsToReview();
         });
     }
 }

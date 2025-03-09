@@ -127,7 +127,7 @@
                     android:layout_gravity="center"
                     android:background="@drawable/button_design1"
                     android:fontFamily="@font/montserrat_bold"
-                    android:onClick="@{v -> viewModel.login(v)}"
+                    android:onClick="@{v -> viewModel.login()}"
                     android:text="Login"
                     android:textColor="@color/white" />
 

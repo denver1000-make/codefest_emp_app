@@ -12,14 +12,27 @@
         <action
             android:id="@+id/action_adminHomeFragment_to_viewUserFragment"
             app:destination="@id/viewUserFragment" />
+        <argument
+            android:name="userId"
+            app:argType="integer" />
+        <argument
+            android:name="statusOfReview"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/viewUserFragment"
-        android:name="com.denprog.codefestapp.destinations.view_user.ViewUserFragment"
+        android:name="com.denprog.codefestapp.destinations.admin.view_user.ViewUserFragment"
         android:label="fragment_view_user"
         tools:layout="@layout/fragment_view_user" >
         <argument
             android:name="userId"
             app:argType="integer" />
+        <action
+            android:id="@+id/action_viewUserFragment_to_adminHomeFragment"
+            app:destination="@id/adminHomeFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/adminProfile"
+        android:name="com.denprog.codefestapp.destinations.profile.ProfileFragment"
+        android:label="ProfileFragment" />
 </navigation>

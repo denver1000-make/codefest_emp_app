@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav"
-    app:startDestination="@id/adminRegister">
+    app:startDestination="@id/dummyFragment">
 
     <fragment
         android:id="@+id/loginFragment"
@@ -13,6 +13,18 @@
         <action
             android:id="@+id/action_loginFragment_to_adminRegister"
             app:destination="@id/adminRegister" />
+        <argument
+            android:name="performAutoLogin"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            app:nullable="true" />
+        <argument
+            android:name="password"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
     <fragment
         android:id="@+id/adminRegister"
@@ -22,5 +34,14 @@
         <action
             android:id="@+id/action_adminRegister_to_loginFragment"
             app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dummyFragment"
+        android:name="com.denprog.codefestapp.destinations.dummy.DummyFragment"
+        android:label="fragment_dummy"
+        tools:layout="@layout/fragment_dummy" >
+        <action
+            android:id="@+id/action_dummyFragment_to_adminRegister"
+            app:destination="@id/adminRegister" />
     </fragment>
 </navigation>

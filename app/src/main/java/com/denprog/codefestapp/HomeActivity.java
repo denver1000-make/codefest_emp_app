@@ -37,10 +37,15 @@ public class HomeActivity extends AppCompatActivity {
 
 
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.adminHomeFragment)
+                R.id.adminHomeFragment, R.id.adminProfile)
                 .build();
         NavController navController = NavHostFragment.findNavController(binding.navHostFragmentActivityHome.getFragment());
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = NavHostFragment.findNavController(binding.navHostFragmentActivityHome.getFragment());
+        return navController.navigateUp() || super.onSupportNavigateUp();
+    }
 }

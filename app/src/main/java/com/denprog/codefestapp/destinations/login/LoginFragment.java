@@ -8,6 +8,8 @@ import static com.denprog.codefestapp.HomeActivityViewModel.USER_ID_BUNDLE_KEY;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -28,17 +30,26 @@ import com.denprog.codefestapp.HomeActivity;
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.activities.EmployerActivity;
 import com.denprog.codefestapp.databinding.FragmentLoginBinding;
+import com.denprog.codefestapp.destinations.dummy.DummyViewModel;
+import com.denprog.codefestapp.room.entity.Admin;
+import com.denprog.codefestapp.room.entity.Employee;
+import com.denprog.codefestapp.room.entity.Employer;
+import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.util.OnOperationSuccessful;
+import com.denprog.codefestapp.util.UIState;
+
+import java.util.List;
 
 public class LoginFragment extends Fragment {
 
     private LoginViewModel mViewModel;
     private FragmentLoginBinding binding;
+    private AlertDialog alertDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         this.binding = FragmentLoginBinding.inflate(getLayoutInflater(), container, false);
-
         return binding.getRoot();
     }
 
@@ -51,47 +62,91 @@ public class LoginFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.mViewModel = new ViewModelProvider(requireActivity()).get(LoginViewModel.class);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
+        LoginFragmentArgs args = LoginFragmentArgs.fromBundle
+                (getArguments());
+
+        if (args.getPerformAutoLogin()) {
+            mViewModel.loginResultState.setValue(new LoginViewModel.RoleState.AutoLoginAfterRegistration());
+        }
+
         mViewModel.loginResultState.observe(getViewLifecycleOwner(), roleState -> {
             if (roleState instanceof LoginViewModel.RoleState.Fail) {
                 Toast.makeText(requireContext(), ((LoginViewModel.RoleState.Fail) roleState).message, Toast.LENGTH_SHORT).show();
-            } else if (roleState instanceof LoginViewModel.RoleState.EmployerState) {
-                mViewModel.checkIfUserIsUnderReview(((LoginViewModel.RoleState.EmployerState) roleState).user.userId, new LoginViewModel.OnUserReviewStatus() {
+            } else if (roleState instanceof LoginViewModel.RoleState.AttemptRedirect) {
+                binding.loginAction.setEnabled(false);
+                mViewModel.performRoleBasedRedirect(roleState.user, new DummyViewModel.OnUserRoleLoaded() {
                     @Override
-                    public void onUserIsNotUnderReview() {
-                        Intent intent = new Intent(requireActivity(), EmployerActivity.class);
-                        intent.putExtra(USER_ID_BUNDLE_KEY, ((LoginViewModel.RoleState.EmployerState) roleState).user.userId);
-                        intent.putExtra(EMPLOYER_ID_BUNDLE_KEY, ((LoginViewModel.RoleState.EmployerState) roleState).employerId);
-                        startActivity(intent);
+                    public void employee(User user, int employeeId) {
+                        redirect(new Intent(requireActivity(), EmployeeActivity.class), user.userId, employeeId);
                     }
 
                     @Override
-                    public void onUserIsUnderReview() {
-                        Toast.makeText(requireContext(), "User is under review", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            } else if (roleState instanceof LoginViewModel.RoleState.EmployeeState) {
-                mViewModel.checkIfUserIsUnderReview(((LoginViewModel.RoleState.EmployeeState) roleState).user.userId, new LoginViewModel.OnUserReviewStatus() {
-                    @Override
-                    public void onUserIsNotUnderReview() {
-                        Intent intent = new Intent(requireActivity(), EmployeeActivity.class);
-                        intent.putExtra(USER_ID_BUNDLE_KEY, ((LoginViewModel.RoleState.EmployeeState) roleState).user.userId);
-                        intent.putExtra(EMPLOYEE_ID_BUNDLER_KEY, ((LoginViewModel.RoleState.EmployeeState) roleState).employeeId);
-                        startActivity(intent);
+                    public void employer(User user, int employerId) {
+                        redirect(new Intent(requireActivity(), EmployerActivity.class), user.userId, employerId);
                     }
 
                     @Override
-                    public void onUserIsUnderReview() {
-                        Toast.makeText(requireContext(), "User is under review", Toast.LENGTH_SHORT).show();
+                    public void admin(User user, int adminId) {
+                        redirect(new Intent(requireActivity(), HomeActivity.class), user.userId, adminId);
+                    }
+
+                    @Override
+                    public void noRoleAttached() {
+                        mViewModel.loginResultState.setValue(new LoginViewModel.RoleState.Fail("No Roles Attached"));
                     }
                 });
-            } else if (roleState instanceof LoginViewModel.RoleState.AdminState) {
-                Intent intent = new Intent(requireActivity(), HomeActivity.class);
-                intent.putExtra(USER_ID_BUNDLE_KEY, ((LoginViewModel.RoleState.AdminState) roleState).user.userId);
-                intent.putExtra(ADMIN_ID_BUNDLE_KEY, ((LoginViewModel.RoleState.AdminState) roleState).adminId);
-                startActivity(intent);
+            } else if (roleState instanceof LoginViewModel.RoleState.AutoLoginAfterRegistration) {
+                String emailFromNav = args.getEmail();
+                String passwordFromNav = args.getPassword();
+                if (emailFromNav != null && passwordFromNav != null) {
+                    mViewModel.emailField.set(emailFromNav);
+                    mViewModel.passwordField.set(passwordFromNav);
+                    mViewModel.login();
+                    binding.loginAction.setEnabled(false);
+                }
+            } else if (roleState instanceof LoginViewModel.RoleState.PromptSaveUser) {
+               buildAndShowAlertDialog(roleState.user, () -> mViewModel.loginResultState.setValue(new LoginViewModel.RoleState.AttemptRedirect(roleState.user)));
+            } else if (roleState instanceof LoginViewModel.RoleState.Loading) {
+                binding.loginAction.setEnabled(false);
+            } else {
+                binding.loginAction.setEnabled(true);
             }
         });
+
+        binding.redirectToRegister.setOnClickListener(view1 -> navController.navigate(R.id.action_loginFragment_to_adminRegister));
         this.binding.setViewModel(mViewModel);
+    }
+
+    private void redirect(Intent intent, int userId, int roleTableId) {
+        intent.putExtra(USER_ID_BUNDLE_KEY, userId);
+        intent.putExtra(ADMIN_ID_BUNDLE_KEY, roleTableId);
+        startActivity(intent);
+        requireActivity().finish();
+    }
+
+    public void buildAndShowAlertDialog(User user, Runnable runnable) {
+        this.alertDialog = new AlertDialog.Builder(requireContext())
+                .setTitle("Save Login Credentials?")
+                .setPositiveButton("Yes", (dialogInterface, i) -> {
+                    mViewModel.saveUserCredential(user.userId, new OnOperationSuccessful<Void>() {
+                        @Override
+                        public void onSuccess(Void data) {
+                            Toast.makeText(requireContext(), "Saved", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onError(String message) {
+                            Toast.makeText(requireContext(), "Error In Saving", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    dialogInterface.dismiss();
+                }).setNegativeButton("No", (dialogInterface, i) -> {
+                    dialogInterface.dismiss();
+                }).setOnDismissListener(dialogInterface -> {
+                    runnable.run();
+                }).create();
+        this.alertDialog.show();
     }
 
 }

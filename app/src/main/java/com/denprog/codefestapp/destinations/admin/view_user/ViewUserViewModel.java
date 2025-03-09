@@ -1,4 +1,4 @@
-package com.denprog.codefestapp.destinations.view_user;
+package com.denprog.codefestapp.destinations.admin.view_user;
 
 import android.content.ContentResolver;
 import android.content.ContentValues;
