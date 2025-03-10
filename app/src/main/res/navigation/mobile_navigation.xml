@@ -11,7 +11,11 @@
         tools:layout="@layout/fragment_application_list" >
         <action
             android:id="@+id/action_adminHomeFragment_to_viewUserFragment"
-            app:destination="@id/viewUserFragment" />
+            app:destination="@id/viewUserFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
         <argument
             android:name="userId"
             app:argType="integer" />
@@ -29,7 +33,11 @@
             app:argType="integer" />
         <action
             android:id="@+id/action_viewUserFragment_to_adminHomeFragment"
-            app:destination="@id/adminHomeFragment" />
+            app:destination="@id/adminHomeFragment"
+            app:enterAnim="@anim/nav_default_enter_anim"
+            app:exitAnim="@anim/nav_default_exit_anim"
+            app:popEnterAnim="@anim/nav_default_pop_enter_anim"
+            app:popExitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
     <fragment
         android:id="@+id/adminProfile"
