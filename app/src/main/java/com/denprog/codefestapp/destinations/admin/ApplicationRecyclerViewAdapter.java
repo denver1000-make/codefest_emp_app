@@ -15,10 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link PlaceholderItem}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<ApplicationRecyclerViewAdapter.ViewHolder> {
 
     private List<User> mValues = new ArrayList<>(Collections.emptyList());
@@ -52,7 +48,6 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
                 itemInterface.view(holder.mItem.userId);
             }
         });
-        holder.mContentView.setText(name);
     }
 
     @Override
@@ -62,18 +57,16 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
-        public final TextView mContentView;
         public User mItem;
 
         public ViewHolder(FragmentApplicationCardBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
-            mContentView = binding.content;
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" +mItem.middleName + "'";
         }
     }
 

@@ -30,11 +30,11 @@ public class EmployerHomeViewModel extends ViewModel {
         this.appDao = appDatabase.getAppDao();
     }
 
-    public void getAllJobPosting () {
+    public void getAllJobPosting (int employerId) {
         CompletableFuture.supplyAsync(new Supplier<List<JobPosting>>() {
             @Override
             public List<JobPosting> get() {
-                return appDao.getAllJobPosting();
+                return appDao.getAllJobPostingCreatedBySpecificEmployer(employerId);
             }
         }).thenAcceptAsync(new Consumer<List<JobPosting>>() {
             @Override

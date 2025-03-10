@@ -78,22 +78,26 @@ public class LoginFragment extends Fragment {
                 mViewModel.performRoleBasedRedirect(roleState.user, new DummyViewModel.OnUserRoleLoaded() {
                     @Override
                     public void employee(User user, int employeeId) {
-                        redirect(new Intent(requireActivity(), EmployeeActivity.class), user.userId, employeeId);
+                        redirect(new Intent(requireActivity(), EmployeeActivity.class), user.userId, EMPLOYEE_ID_BUNDLER_KEY, employeeId);
+                        binding.loginAction.setEnabled(true);
                     }
 
                     @Override
                     public void employer(User user, int employerId) {
-                        redirect(new Intent(requireActivity(), EmployerActivity.class), user.userId, employerId);
+                        redirect(new Intent(requireActivity(), EmployerActivity.class), user.userId, EMPLOYER_ID_BUNDLE_KEY, employerId);
+                        binding.loginAction.setEnabled(true);
                     }
 
                     @Override
                     public void admin(User user, int adminId) {
-                        redirect(new Intent(requireActivity(), HomeActivity.class), user.userId, adminId);
+                        redirect(new Intent(requireActivity(), HomeActivity.class), user.userId, ADMIN_ID_BUNDLE_KEY, adminId);
+                        binding.loginAction.setEnabled(true);
                     }
 
                     @Override
                     public void noRoleAttached() {
                         mViewModel.loginResultState.setValue(new LoginViewModel.RoleState.Fail("No Roles Attached"));
+                        binding.loginAction.setEnabled(true);
                     }
                 });
             } else if (roleState instanceof LoginViewModel.RoleState.AutoLoginAfterRegistration) {
@@ -118,9 +122,9 @@ public class LoginFragment extends Fragment {
         this.binding.setViewModel(mViewModel);
     }
 
-    private void redirect(Intent intent, int userId, int roleTableId) {
+    private void redirect(Intent intent, int userId, String roleIdNameKey, int roleTableId) {
         intent.putExtra(USER_ID_BUNDLE_KEY, userId);
-        intent.putExtra(ADMIN_ID_BUNDLE_KEY, roleTableId);
+        intent.putExtra(roleIdNameKey, roleTableId);
         startActivity(intent);
         requireActivity().finish();
     }

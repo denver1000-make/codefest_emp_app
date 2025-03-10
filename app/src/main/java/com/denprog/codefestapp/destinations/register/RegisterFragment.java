@@ -79,6 +79,14 @@ public class RegisterFragment extends Fragment {
                 }).setNegativeButton("No", (dialogInterface, i) -> {
                     navController.navigate(RegisterFragmentDirections.actionAdminRegisterToLoginFragment(null, null));
                     dialogInterface.dismiss();
+                }).setOnDismissListener(dialogInterface -> {
+                    mViewModel.userMutableLiveData.setValue(null);
+                    mViewModel.passwordField.set("");
+                    mViewModel.emailField.set("");
+                    mViewModel.confirmPasswordField.set("");
+                    mViewModel.firstNameField.set("");
+                    mViewModel.lastNameField.set("");
+                    mViewModel.middleNameField.set("");
                 }).create();
         return this.binding.getRoot();
     }
@@ -136,7 +144,7 @@ public class RegisterFragment extends Fragment {
 
         mViewModel.roleMutableLiveData.observe(getViewLifecycleOwner(), s -> {
             if (s.equals("Admin")) {
-                                                                                                                                                                                                                                                                                                                                                                                                                           this.binding.addFile.setVisibility(View.GONE);
+                this.binding.addFile.setVisibility(View.GONE);
                 this.binding.filesLoadedList.setVisibility(View.GONE);
             } else if (s.equals("Employee")) {
                 this.binding.addFile.setVisibility(View.VISIBLE);
@@ -146,8 +154,7 @@ public class RegisterFragment extends Fragment {
                 this.binding.filesLoadedList.setVisibility(View.VISIBLE);
             }
         });
-
-                   mViewModel.userMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
+        mViewModel.userMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Success) {
                 this.alertDialog.show();
                 Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show();

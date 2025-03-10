@@ -3,9 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation2"
-    app:startDestination="@id/profileFragment2">
+    app:startDestination="@id/employeeHomeFragment">
     <fragment
-        android:id="@+id/profileFragment2"
+        android:id="@+id/employeeProfileFragment"
         android:name="com.denprog.codefestapp.destinations.profile.ProfileFragment"
         android:label="ProfileFragment" />
+    <fragment
+        android:id="@+id/employeeHomeFragment"
+        android:name="com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment"
+        android:label="EmployeeHomeFragment" />
 </navigation>

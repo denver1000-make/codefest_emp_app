@@ -6,12 +6,16 @@ import android.os.Looper;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.denprog.codefestapp.destinations.admin.view_user.ViewUserViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.UIState;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import javax.inject.Inject;
 
@@ -23,6 +27,7 @@ public class ProfileViewModel extends ViewModel {
     AppDao appDao;
 
     public MutableLiveData<UIState<User>> mutableUserState = new MutableLiveData<>();
+    public MutableLiveData<UIState<Void>> logoutState = new MutableLiveData<>();
     private Handler handler = new Handler(Looper.getMainLooper());
     @Inject
     public ProfileViewModel(AppDatabase appDatabase) {
@@ -44,6 +49,21 @@ public class ProfileViewModel extends ViewModel {
     }
     public interface OnMessageReceived {
         void onUserRoleDetermined(String data);
+    }
+
+    public void clearSavedLogin() {
+        logoutState.setValue(new UIState.Loading<>());
+        CompletableFuture<Void> completableFuture = CompletableFuture.supplyAsync(() -> {
+            appDao.clearSavedLogins();
+            return null;
+        });
+
+        completableFuture.thenAccept(unused -> handler.post(() -> logoutState.setValue(new UIState.Success<>(null))));
+
+        completableFuture.exceptionally(throwable -> {
+            logoutState.setValue(new UIState.Fail<>(throwable.getLocalizedMessage()));
+            return null;
+        });
     }
 
 }

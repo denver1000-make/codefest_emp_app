@@ -44,7 +44,12 @@ public class DummyViewModel extends ViewModel {
         });
 
         completableFuture.exceptionally(throwable -> {
-            onOperationSuccessful.onError(throwable.getLocalizedMessage());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    onOperationSuccessful.onError(throwable.getLocalizedMessage());
+                }
+            });
             return null;
         });
 

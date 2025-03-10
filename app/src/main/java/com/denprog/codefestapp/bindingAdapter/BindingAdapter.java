@@ -11,18 +11,20 @@ import android.widget.Spinner;
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
 
+import com.google.android.material.textfield.TextInputEditText;
+
 public class BindingAdapter {
 
 
     @androidx.databinding.BindingAdapter("android:text")
-    public static void setFloat(EditText editText, float value) {
-        if (editText.getText().toString().equals(String.valueOf(value))) {
+    public static void setFloat(TextInputEditText editText, float value) {
+        if (!editText.toString().equals(String.valueOf(value))) {
             editText.setText(String.valueOf(value));
         }
     }
 
     @InverseBindingAdapter(attribute = "android:text", event = "textAttrChanged")
-    public static float getFloat(EditText view) {
+    public static float getFloat(TextInputEditText view) {
         try {
             return Float.parseFloat(view.getText().toString());
         } catch (NumberFormatException e) {
@@ -31,7 +33,7 @@ public class BindingAdapter {
     }
 
     @androidx.databinding.BindingAdapter("textAttrChanged")
-    public static void setListener(EditText editText, final InverseBindingListener listener) {
+    public static void setListener(TextInputEditText editText, final InverseBindingListener listener) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

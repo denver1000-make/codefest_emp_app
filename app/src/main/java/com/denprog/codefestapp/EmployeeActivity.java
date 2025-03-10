@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -26,9 +27,9 @@ public class EmployeeActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder()
+        AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(R.id.employeeHomeFragment, R.id.employeeProfileFragment)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_activity_employee);
+        NavController navController = NavHostFragment.findNavController(binding.navHostFragmentActivityEmployee.getFragment());
         NavigationUI.setupWithNavController(binding.navView, navController);
     }
 

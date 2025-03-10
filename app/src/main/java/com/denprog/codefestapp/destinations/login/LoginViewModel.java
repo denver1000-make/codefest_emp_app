@@ -64,7 +64,7 @@ public class LoginViewModel extends ViewModel {
 
         completableFuture.thenAcceptAsync(user -> {
             if (checkIfUserIsUnderReviewSync(user.userId)) {
-                loginResultState.setValue(new RoleState.Fail("Account is under review"));
+                loginResultState.postValue(new RoleState.Fail("Account is under review"));
             } else {
                 loginResultState.postValue(new RoleState.PromptSaveUser(user));
             }

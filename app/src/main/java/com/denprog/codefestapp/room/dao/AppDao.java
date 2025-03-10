@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
@@ -61,4 +62,16 @@ public interface AppDao {
     void insertSave(SavedUserCredentials savedUserCredentials);
     @Query("SELECT * FROM SavedUserCredentials")
     List<SavedUserCredentials> getAllSavedUserCredentials();
+
+    @Query("DELETE FROM SavedUserCredentials")
+    void clearSavedLogins();
+
+    @Query("SELECT * FROM JobPosting WHERE employerId = :employerId")
+    List<JobPosting> getAllJobPostingCreatedBySpecificEmployer(int employerId);
+
+    @Query("SELECT * FROM JobPosting WHERE postingId = :jobPostingId")
+    List<JobPosting> getJobPostingId(int jobPostingId);
+
+    @Update
+    void updateJobPosting(JobPosting jobPosting);
 }

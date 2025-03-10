@@ -11,11 +11,12 @@ import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
 
-@Database(version = 5, entities = {
+@Database(version = 6, entities = {
         User.class,
         Employer.class,
         Employee.class,
@@ -24,7 +25,8 @@ import com.denprog.codefestapp.room.entity.User;
         Credentials.class,
         AccountForReview.class,
         ReviewStatus.class,
-        SavedUserCredentials.class}, exportSchema = false)
+        SavedUserCredentials.class,
+        JobPostingApplicationFile.class}, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AppDao getAppDao();
 
