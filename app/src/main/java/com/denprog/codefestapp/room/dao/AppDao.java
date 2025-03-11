@@ -12,6 +12,8 @@ import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.room.entity.JobPostingApplication;
+import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
@@ -62,16 +64,19 @@ public interface AppDao {
     void insertSave(SavedUserCredentials savedUserCredentials);
     @Query("SELECT * FROM SavedUserCredentials")
     List<SavedUserCredentials> getAllSavedUserCredentials();
-
     @Query("DELETE FROM SavedUserCredentials")
     void clearSavedLogins();
-
     @Query("SELECT * FROM JobPosting WHERE employerId = :employerId")
     List<JobPosting> getAllJobPostingCreatedBySpecificEmployer(int employerId);
-
     @Query("SELECT * FROM JobPosting WHERE postingId = :jobPostingId")
     List<JobPosting> getJobPostingId(int jobPostingId);
-
     @Update
     void updateJobPosting(JobPosting jobPosting);
+    @Insert
+    long insertApplication(JobPostingApplication jobPostingApplication);
+    @Insert
+    void insertApplicationFile(JobPostingApplicationFile jobPostingApplicationFile);
+
+    @Query("SELECT * FROM JobPostingApplication WHERE employeeId =:employeeId AND jobPostingId =:jobPostingId")
+    List<JobPostingApplication> getJobPostingApplicationByEmployeeIdAndJobPostingId(int employeeId, int jobPostingId);
 }

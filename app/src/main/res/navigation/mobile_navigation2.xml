@@ -11,5 +11,21 @@
     <fragment
         android:id="@+id/employeeHomeFragment"
         android:name="com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment"
-        android:label="EmployeeHomeFragment" />
+        android:label="EmployeeHomeFragment" >
+        <action
+            android:id="@+id/action_employeeHomeFragment_to_jobPostingApplicationDialogFragment"
+            app:destination="@id/jobPostingApplicationDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jobPostingApplicationDialogFragment"
+        android:name="com.denprog.codefestapp.destinations.employee.dialog.JobPostingApplicationDialogFragment"
+        android:label="fragment_job_posting_application_dialog_list"
+        tools:layout="@layout/fragment_job_posting_application_dialog_list" >
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+        <argument
+            android:name="jobPostingId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

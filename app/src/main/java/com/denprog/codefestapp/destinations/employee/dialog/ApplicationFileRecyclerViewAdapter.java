@@ -4,11 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.employee.dialog.placeholder.PlaceholderContent.PlaceholderItem;
 import com.denprog.codefestapp.databinding.FragmentJobPostingApplicationItemBinding;
 import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
 
@@ -71,7 +68,7 @@ public class ApplicationFileRecyclerViewAdapter extends RecyclerView.Adapter<App
         @NonNull
         @Override
         public String toString() {
-            return super.toString() + " '" + mItem.applicationId + "'";
+            return super.toString() + " '" + mItem.jobPostingApplicationFileId + "'";
         }
     }
 }

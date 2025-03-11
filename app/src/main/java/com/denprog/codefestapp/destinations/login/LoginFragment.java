@@ -143,6 +143,11 @@ public class LoginFragment extends Fragment {
                         public void onError(String message) {
                             Toast.makeText(requireContext(), "Error In Saving", Toast.LENGTH_SHORT).show();
                         }
+
+                        @Override
+                        public void onLoading() {
+
+                        }
                     });
                     dialogInterface.dismiss();
                 }).setNegativeButton("No", (dialogInterface, i) -> {

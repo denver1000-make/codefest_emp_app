@@ -10,17 +10,35 @@ import androidx.room.PrimaryKey;
                 entity = Employee.class,
                 parentColumns = "employeeId",
                 childColumns = "employeeId"
+        ),
+        @ForeignKey(
+                entity = JobPostingApplication.class,
+                childColumns = "jobPostingApplicationId",
+                parentColumns = "jobPostingApplicationId"
         )
 })
 public class JobPostingApplicationFile {
     @Ignore
     public static final String FOLDER_OF_APPLICATION_FILE = "application_files";
     @PrimaryKey(autoGenerate = true)
-    public int applicationId;
+    public int jobPostingApplicationFileId;
     public String pathOfFile;
     public int employeeId;
+    public int jobPostingApplicationId;
 
+    @Ignore
+    public JobPostingApplicationFile(String pathOfFile, int employeeId, int jobPostingApplicationId) {
+        this.pathOfFile = pathOfFile;
+        this.employeeId = employeeId;
+        this.jobPostingApplicationId = jobPostingApplicationId;
+    }
+
+    @Ignore
     public JobPostingApplicationFile(String pathOfFile) {
         this.pathOfFile = pathOfFile;
+    }
+
+    public JobPostingApplicationFile() {
+
     }
 }

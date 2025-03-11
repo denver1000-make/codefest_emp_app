@@ -93,6 +93,11 @@ public class DummyFragment extends Fragment {
             public void onError(String message) {
                 navController.navigate(R.id.action_dummyFragment_to_adminRegister);
             }
+
+            @Override
+            public void onLoading() {
+
+            }
         });
     }
 }

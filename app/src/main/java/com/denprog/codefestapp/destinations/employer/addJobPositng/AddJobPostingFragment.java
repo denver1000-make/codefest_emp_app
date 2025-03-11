@@ -84,6 +84,11 @@ public class AddJobPostingFragment extends DialogFragment {
                         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
+
+                    @Override
+                    public void onLoading() {
+
+                    }
                 }));
             }
         } else {

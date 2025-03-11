@@ -6,4 +6,6 @@ public interface OnOperationSuccessful <T>{
 
     void onError(String message);
 
+    void onLoading();
+
 }

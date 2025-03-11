@@ -13,6 +13,7 @@ legacySupportV4 = "1.0.0"
 lifecycleLivedataKtx = "2.8.7"
 lifecycleViewmodelKtx = "2.8.7"
 recyclerview = "1.4.0"
+roomCompiler = "2.6.1"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -28,6 +29,8 @@ legacy-support-v4 = { group = "androidx.legacy", name = "legacy-support-v4", ver
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 recyclerview = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "recyclerview" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomCompiler" }
+room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomCompiler" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
