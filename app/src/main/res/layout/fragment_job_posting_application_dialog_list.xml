@@ -5,32 +5,87 @@
     android:name="com.denprog.codefestapp.destinations.employee.dialog.JobPostingApplicationDialogFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+
     app:layoutManager="LinearLayoutManager"
     tools:context=".destinations.employee.dialog.JobPostingApplicationDialogFragment"
     tools:listitem="@layout/fragment_job_posting_application_item">
 
-    <Button
-        android:id="@+id/apply_for_job"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Apply"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cancel_application_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
 
-    <Button
-        android:id="@+id/cancel_application_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="76dp"
-        android:text="Cancel"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/list"
-        app:layout_constraintVertical_bias="0.501" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/list">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/background_design"
+            android:elevation="20dp"
+            android:padding="10dp"
+            android:orientation="vertical"
+            android:layout_margin="10dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingTop="50dp"
+                >
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/apply_for_job"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:layout_marginEnd="5dp"
+                    android:background="@drawable/button_design1"
+                    android:text="Apply"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/cancel_application_btn"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/list" />
+
+                <androidx.appcompat.widget.AppCompatButton
+                    android:id="@+id/cancel_application_btn"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="5dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_design1"
+                    android:text="Cancel"
+                    android:textColor="@color/white"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/list"
+                    app:layout_constraintVertical_bias="0.501" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/add_file_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat"
+                android:text="Add Files"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="20sp" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
@@ -40,17 +95,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/add_file_action"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Add Files"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.209"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/apply_for_job"
-        app:layout_constraintVertical_bias="0.202" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
