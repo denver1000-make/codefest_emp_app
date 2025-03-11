@@ -18,7 +18,7 @@ import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
 
-@Database(version = 1, entities = {
+@Database(version = 3, entities = {
         User.class,
         Employer.class,
         Employee.class,

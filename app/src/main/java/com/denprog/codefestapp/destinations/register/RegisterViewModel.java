@@ -44,9 +44,6 @@ public class RegisterViewModel extends ViewModel {
     public ObservableField<String> passwordField = new ObservableField<>("");
     public ObservableField<String> confirmPasswordField = new ObservableField<>("");
     public MutableLiveData<String> roleMutableLiveData = new MutableLiveData<>("");
-
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-
     public MutableLiveData<UIState<User>> userMutableLiveData = new MutableLiveData<>(null);
     public MutableLiveData<FileActionState> fileActionStateMutableLiveData = new MutableLiveData<>(null);
     private AppDao appDao;
@@ -92,12 +89,14 @@ public class RegisterViewModel extends ViewModel {
             String roleKey = roleMutableLiveData.getValue();
             if (roleKey.equals("Admin")) {
                 appDao.insertAdmin(new Admin(userId));
+                user.roleName = "Admin";
             } else if (roleKey.equals("Employee")) {
                 Employee employee = new Employee(userId);
                 int employeeId = (int) appDao.insertEmployee(employee);
                 selectedFiles.forEach(selectedFile -> {
                         saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, userId, context);
                 });
+                user.roleName = "Employee";
                 appDao.insertAccountReview(new AccountForReview(userId));
             } else if (roleKey.equals("Employer")) {
                 Employer employer = new Employer(userId);
@@ -105,8 +104,12 @@ public class RegisterViewModel extends ViewModel {
                 selectedFiles.forEach(selectedFile -> {
                     saveEmployeeCredentials(selectedFile.uri, selectedFile.fileName, userId, context);
                 });
+                user.roleName = "Employer";
                 appDao.insertAccountReview(new AccountForReview(userId));
             }
+            // Lol
+            user.userId = userId;
+            appDao.updateUser(user);
             return user;
         }).thenAccept(unused -> {
             userMutableLiveData.postValue(new UIState.Success<>(user));

@@ -46,7 +46,7 @@ public interface AppDao {
     List<Credentials> getAllCredentialsByUserIdCredentials(int userId);
     @Insert
     void insertAccountReview(AccountForReview accountForReview);
-    @Query("SELECT User.userId, User.email, User.password, User.firstName, User.middleName, User.lastName FROM User INNER JOIN AccountForReview ON User.userId = AccountForReview.userId")
+    @Query("SELECT User.userId, User.email, User.password, User.firstName, User.middleName, User.lastName, User.roleName FROM User INNER JOIN AccountForReview ON User.userId = AccountForReview.userId")
     List<User> getAllAccountsForReview();
     @Query("SELECT * FROM User WHERE User.userId = :userId")
     List<User> getUserById(int userId);
@@ -79,4 +79,7 @@ public interface AppDao {
 
     @Query("SELECT * FROM JobPostingApplication WHERE employeeId =:employeeId AND jobPostingId =:jobPostingId")
     List<JobPostingApplication> getJobPostingApplicationByEmployeeIdAndJobPostingId(int employeeId, int jobPostingId);
+
+    @Update
+    void updateUser(User user);
 }

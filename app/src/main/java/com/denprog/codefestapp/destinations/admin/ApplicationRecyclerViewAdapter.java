@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.denprog.codefestapp.databinding.FragmentApplicationCardBinding;
+import com.denprog.codefestapp.databinding.FragmentJobPostingApplicationItemBinding;
 import com.denprog.codefestapp.destinations.admin.placeholder.PlaceholderContent.PlaceholderItem;
 import com.denprog.codefestapp.room.entity.User;
 
@@ -40,14 +41,17 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).userId + "");
-        String name = holder.mItem.firstName + " " + holder.mItem.middleName + " " + holder.mItem.lastName;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 itemInterface.view(holder.mItem.userId);
             }
         });
+        String fullName = holder.mItem.firstName + " " + holder.mItem.middleName + " " + holder.mItem.lastName;
+
+        holder.binding.emailDisplay.setText(holder.mItem.email);
+        holder.binding.fullnameDisplay.setText(fullName);
+        holder.binding.roleDisplay.setText(holder.mItem.roleName);
     }
 
     @Override
@@ -56,12 +60,12 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
         public User mItem;
+        public FragmentApplicationCardBinding binding;
 
         public ViewHolder(FragmentApplicationCardBinding binding) {
             super(binding.getRoot());
-            mIdView = binding.itemNumber;
+            this.binding = binding;
         }
 
         @Override
