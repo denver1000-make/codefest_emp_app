@@ -1,5 +1,7 @@
 package com.denprog.codefestapp.destinations.profile;
 
+import static com.denprog.codefestapp.HomeActivityViewModel.USER_ID_BUNDLE_KEY;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.MainActivity;
 import com.denprog.codefestapp.databinding.FragmentProfileBinding;
 import com.denprog.codefestapp.room.entity.User;
@@ -34,36 +37,54 @@ public class ProfileFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mViewModel = new ViewModelProvider(requireActivity()).get(ProfileViewModel.class);
+
         mViewModel.mutableUserState.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Success) {
                 binding.setUser(((UIState.Success<User>) userUIState).data);
-                mViewModel.determineRole(((UIState.Success<User>) userUIState).data.userId, data -> binding.textView7.setText(data));
+                User user = ((UIState.Success<User>) userUIState).data;
+                binding.firstnameDisplayField.setText(user.firstName);
+                binding.lastnameDisplay.setText(user.middleName);
+                binding.middlenameDisplay.setText(user.middleName);
+                binding.emailProfileDisplay.setText(user.email);
+                mViewModel.determineRole(((UIState.Success<User>) userUIState).data.userId, data -> {
+                    binding.roleDisplay.setText(data);
+                });
+                this.binding.logoutAction.setOnClickListener(view -> {
+                    mViewModel.clearSavedLogin();
+                });
             } else if (userUIState instanceof UIState.Fail) {
                 Toast.makeText(requireContext(), ((UIState.Fail<User>) userUIState).message, Toast.LENGTH_SHORT).show();
             }
         });
 
-        this.mViewModel.logoutState.observe(getViewLifecycleOwner(), new Observer<UIState<Void>>() {
-            @Override
-            public void onChanged(UIState<Void> voidUIState) {
-                if (voidUIState instanceof UIState.Loading) {
-                    binding.logoutAction.setEnabled(false);
-                } else if (voidUIState instanceof UIState.Fail) {
-                    binding.logoutAction.setEnabled(true);
-                    Toast.makeText(requireContext(), ((UIState.Fail<Void>) voidUIState).message, Toast.LENGTH_SHORT).show();
-                } else if (voidUIState instanceof UIState.Success) {
-                    binding.logoutAction.setEnabled(false);
-                    Toast.makeText(requireContext(), "Cleared Saved Login", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(requireActivity(), MainActivity.class);
-                    startActivity(intent);
-                    requireActivity().finish();
-                }
+        Intent intentFromActivity = requireActivity().getIntent();
+        Bundle args = intentFromActivity.getExtras();
+        if (args != null) {
+            int userId = args.getInt(USER_ID_BUNDLE_KEY, -1);
+            if (userId != -1) {
+                mViewModel.getUser(userId);
+            } else {
+                Toast.makeText(requireContext(), "User Is Not Recognized", Toast.LENGTH_SHORT).show();
+                requireActivity().finish();
+            }
+        }
+
+        this.mViewModel.logoutState.observe(getViewLifecycleOwner(), voidUIState -> {
+            if (voidUIState instanceof UIState.Loading) {
+                binding.logoutAction.setEnabled(false);
+            } else if (voidUIState instanceof UIState.Fail) {
+                binding.logoutAction.setEnabled(true);
+                Toast.makeText(requireContext(), ((UIState.Fail<Void>) voidUIState).message, Toast.LENGTH_SHORT).show();
+            } else if (voidUIState instanceof UIState.Success) {
+                binding.logoutAction.setEnabled(false);
+                Toast.makeText(requireContext(), "Cleared Saved Login", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(requireActivity(), MainActivity.class);
+                startActivity(intent);
+                requireActivity().finish();
             }
         });
 
-        this.binding.logoutAction.setOnClickListener(view -> {
-            mViewModel.clearSavedLogin();
-        });
+
     }
 
 }

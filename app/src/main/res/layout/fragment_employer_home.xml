@@ -4,47 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#0050AD"
-        android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_bold"
-                android:layout_weight="1"
-                android:text="STI JOB PORTAL"
-                android:shadowColor="@color/sti_yellow"
-                android:shadowDx="3"
-                android:shadowDy="5"
-                android:shadowRadius="3"
-                android:textColor="@color/white"
-                android:textSize="25sp"
-                android:layout_gravity="center_vertical"
-                android:textStyle="bold" />
-            <ImageView
-                android:layout_width="80dp"
-                android:layout_height="50dp"
-                android:src="@drawable/sti_logo"
-                android:layout_marginEnd="10dp"
-
-                />
-
-        </LinearLayout>
-
-    </Toolbar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/add_jobposting_action"
@@ -69,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintTop_toTopOf="parent"
         tools:context=".destinations.employer.EmployerHomeFragment"
         tools:listitem="@layout/fragment_job_posting_item" />
 

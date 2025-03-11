@@ -40,10 +40,18 @@ import java.util.List;
 public class JobPostingApplicationDialogFragment extends Fragment {
     public static final String EMPLOYEE_ID_BUNDLE_KEY = "EMPLOYEE_ID";
     public static final String JOB_POSTING_ID_BUNDLE_KEY = "JOB_POSTING_ID";
-    ActivityResultLauncher<Intent> filePicker;
+
+    JobPostingDialogViewModel viewModel;
+    ActivityResultLauncher<Intent> filePicker = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), o -> {
+        if (o.getResultCode() == Activity.RESULT_OK && o.getData() != null) {
+            if (o.getData().getData() != null) {
+                String filePath = FileUtil.getFileName(requireContext(), o.getData().getData());
+                viewModel.addFile(new JobPostingApplicationFile(filePath));
+            }
+        }
+    });;
     FragmentJobPostingApplicationDialogListBinding binding;
     ApplicationFileRecyclerViewAdapter adapter;
-    JobPostingDialogViewModel viewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,17 +69,7 @@ public class JobPostingApplicationDialogFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult o) {
-                if (o.getResultCode() == Activity.RESULT_OK && o.getData() != null) {
-                    if (o.getData().getData() != null) {
-                        String filePath = FileUtil.getFileName(requireContext(), o.getData().getData());
-                        viewModel.addFile(new JobPostingApplicationFile(filePath));
-                    }
-                }
-            }
-        });
+
         this.viewModel = new ViewModelProvider(requireActivity()).get(JobPostingDialogViewModel.class);
 
         JobPostingApplicationDialogFragmentArgs args = JobPostingApplicationDialogFragmentArgs.fromBundle(getArguments());
@@ -93,44 +91,45 @@ public class JobPostingApplicationDialogFragment extends Fragment {
             }
         });
 
-        this.viewModel.credentialStatus.observe(requireActivity(), new Observer<>() {
-            @Override
-            public void onChanged(UIState<JobPostingIdAndEmployeeId> jobPostingIdAndEmployeeIdUIState) {
-                if (jobPostingIdAndEmployeeIdUIState instanceof UIState.Success) {
-                    JobPostingIdAndEmployeeId jobPostingIdAndEmployeeId = ((UIState.Success<JobPostingIdAndEmployeeId>) jobPostingIdAndEmployeeIdUIState).data;
-                    int employeeId = jobPostingIdAndEmployeeId.employeeId;
-                    int jobPostingId = jobPostingIdAndEmployeeId.jobPostingId;
+        this.viewModel.credentialStatus.observe(requireActivity(), jobPostingIdAndEmployeeIdUIState -> {
+            if (jobPostingIdAndEmployeeIdUIState instanceof UIState.Success) {
+                JobPostingIdAndEmployeeId jobPostingIdAndEmployeeId = ((UIState.Success<JobPostingIdAndEmployeeId>) jobPostingIdAndEmployeeIdUIState).data;
+                int employeeId1 = jobPostingIdAndEmployeeId.employeeId;
+                int jobPostingId1 = jobPostingIdAndEmployeeId.jobPostingId;
 
-                    viewModel.jobPostingApplicationFiles.observe(requireActivity(), jobPostingApplicationFiles -> adapter.refreshList(jobPostingApplicationFiles));
+                viewModel.jobPostingApplicationFiles.observe(requireActivity(),
 
-                    binding.addFileAction.setOnClickListener(view -> {
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                        intent.setType("*/*");
-                        filePicker.launch(intent);
-                    });
+                        jobPostingApplicationFiles -> adapter.refreshList(jobPostingApplicationFiles));
 
-                    binding.applyForJob.setOnClickListener(view1 -> viewModel.insertApplication(employeeId, jobPostingId, new OnOperationSuccessful<>() {
-                        @Override
-                        public void onSuccess(Void data) {
-                            binding.addFileAction.setEnabled(true);
-                        }
+                binding.addFileAction.setOnClickListener(view2 -> {
+                    Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    intent.setType("*/*");
+                    filePicker.launch(intent);
+                });
 
-                        @Override
-                        public void onError(String message) {
-                            binding.addFileAction.setEnabled(true);
-                            Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
-                        }
+                binding.applyForJob.setOnClickListener(view1 -> viewModel.insertApplication(employeeId1, jobPostingId1, new OnOperationSuccessful<>() {
+                    @Override
+                    public void onSuccess(Void data) {
+                        binding.addFileAction.setEnabled(true);
+                    }
 
-                        @Override
-                        public void onLoading() {
-                            binding.addFileAction.setEnabled(false);
-                        }
-                    }));
+                    @Override
+                    public void onError(String message) {
+                        binding.addFileAction.setEnabled(true);
+                        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show();
+                    }
 
-                } else if (jobPostingIdAndEmployeeIdUIState instanceof UIState.Fail) {
-                    Toast.makeText(requireContext(), ((UIState.Fail<JobPostingIdAndEmployeeId>) jobPostingIdAndEmployeeIdUIState).message, Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onLoading() {
+                        binding.addFileAction.setEnabled(false);
+                    }
+                }));
+                binding.list.setAdapter(adapter);
+                binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-                }
+            } else if (jobPostingIdAndEmployeeIdUIState instanceof UIState.Fail) {
+                Toast.makeText(requireContext(), ((UIState.Fail<JobPostingIdAndEmployeeId>) jobPostingIdAndEmployeeIdUIState).message, Toast.LENGTH_SHORT).show();
+
             }
         });
 

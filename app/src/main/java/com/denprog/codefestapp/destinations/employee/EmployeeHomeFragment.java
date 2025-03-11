@@ -15,11 +15,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employee.dialog.JobPostingApplicationDialogFragment;
@@ -32,6 +34,7 @@ public class EmployeeHomeFragment extends Fragment {
     FragmentEmployerHomeBinding binding;
     JobPostingRecyclerViewAdapter adapter;
     EmployeeHomeViewModel viewModel;
+    EmployeeActivityViewModel mainViewModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,36 +54,22 @@ public class EmployeeHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.viewModel = new ViewModelProvider(requireActivity()).get(EmployeeHomeViewModel.class);
+        this.mainViewModel = new ViewModelProvider(requireActivity()).get(EmployeeActivityViewModel.class);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_employee);
-        Intent intent = requireActivity().getIntent();
-
-        if (intent != null) {
-            int userId = intent.getIntExtra(USER_ID_BUNDLE_KEY, -1);
-            int employeeId = intent.getIntExtra(EMPLOYEE_ID_BUNDLER_KEY, -1);
-            if (userId != -1 && employeeId != -1) {
-                viewModel.employeeCredentialsUIState.setValue(new UIState.Success<>(new EmployeeHomeViewModel.EmployeeCredentials(employeeId, userId)));
-            } else {
-                viewModel.employeeCredentialsUIState.setValue(new UIState.Fail<>("No EmployeeId Was Loaded"));
-            }
-        } else {
-            viewModel.employeeCredentialsUIState.setValue(new UIState.Fail<>("Intent was null"));
-        }
-
-        viewModel.employeeCredentialsUIState.observe(getViewLifecycleOwner(), employeeCredentialsUIState -> {
-            if (employeeCredentialsUIState instanceof UIState.Success) {
-                this.adapter = new JobPostingRecyclerViewAdapter(jobPostingId -> {
-                    EmployeeHomeViewModel.EmployeeCredentials employeeCredentials = ((UIState.Success<EmployeeHomeViewModel.EmployeeCredentials>) employeeCredentialsUIState).data;
-                    navController.navigate(EmployeeHomeFragmentDirections.actionEmployeeHomeFragmentToJobPostingApplicationDialogFragment(employeeCredentials.employeeId, jobPostingId));
+        this.mainViewModel.mutableLiveData.observe(getViewLifecycleOwner(), employeeIdUIState -> {
+            if (employeeIdUIState instanceof UIState.Success) {
+                EmployeeActivityViewModel.EmployeeId employeeIdCredentials = ((UIState.Success<EmployeeActivityViewModel.EmployeeId>) employeeIdUIState).data;
+                        adapter = new JobPostingRecyclerViewAdapter(jobPostingId -> {
+                    navController.navigate(EmployeeHomeFragmentDirections.actionEmployeeHomeFragmentToJobPostingApplicationDialogFragment(employeeIdCredentials.employeeId, jobPostingId));
 
                 });
-
-                this.viewModel.getAllJobPosting();
-                this.viewModel.listMutableLiveData.observe(getViewLifecycleOwner(),
+                viewModel.getAllJobPosting();
+                viewModel.listMutableLiveData.observe(getViewLifecycleOwner(),
                         jobPostingList -> adapter.refreshList(jobPostingList));
                 binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
                 binding.list.setAdapter(adapter);
-            } else if (employeeCredentialsUIState instanceof UIState.Fail) {
-                Toast.makeText(requireContext(), ((UIState.Fail<EmployeeHomeViewModel.EmployeeCredentials>) employeeCredentialsUIState).message, Toast.LENGTH_SHORT).show();
+            } else if (employeeIdUIState instanceof UIState.Fail) {
+                Toast.makeText(requireContext(), ((UIState.Fail<EmployeeActivityViewModel.EmployeeId>) employeeIdUIState).message, Toast.LENGTH_SHORT).show();
             }
         });
     }

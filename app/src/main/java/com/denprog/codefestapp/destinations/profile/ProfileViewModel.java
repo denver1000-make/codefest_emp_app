@@ -12,6 +12,7 @@ import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.UIState;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -49,6 +50,25 @@ public class ProfileViewModel extends ViewModel {
     }
     public interface OnMessageReceived {
         void onUserRoleDetermined(String data);
+    }
+
+    public void getUser(int userId) {
+        CompletableFuture<User> completableFuture = CompletableFuture.supplyAsync(new Supplier<User>() {
+            @Override
+            public User get() {
+                List<User> user = appDao.getUserById(userId);
+                if (user.isEmpty()) {
+                    throw new RuntimeException("No Users Found");
+                }
+                return user.get(0);
+            }
+        });
+
+        completableFuture.thenAcceptAsync(user -> mutableUserState.postValue(new UIState.Success<>(user)));
+        completableFuture.exceptionally(throwable -> {
+            mutableUserState.postValue(new UIState.Fail<>(throwable.getLocalizedMessage()));
+            return null;
+        });
     }
 
     public void clearSavedLogin() {
