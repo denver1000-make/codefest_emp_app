@@ -16,9 +16,13 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.LinearLayout;
 
 import com.denprog.codefestapp.EmployeeActivity;
 import com.denprog.codefestapp.HomeActivity;
@@ -43,6 +47,8 @@ public class DummyFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dummy, container, false);
+
+
     }
 
     @Override
@@ -51,6 +57,9 @@ public class DummyFragment extends Fragment {
         mViewModel = new ViewModelProvider(this).get(DummyViewModel.class);
         NavController navController = Navigation.findNavController(requireActivity(), R.id.fragmentContainerView);
         mViewModel.checkIfThereIsSavedLogin(new OnOperationSuccessful<>() {
+
+
+
             @Override
             public void onSuccess(User data) {
                 mViewModel.performRoleBasedRedirect(data, new DummyViewModel.OnUserRoleLoaded() {
@@ -59,8 +68,11 @@ public class DummyFragment extends Fragment {
                         Intent intent = new Intent(requireActivity(), EmployeeActivity.class);
                         intent.putExtra(USER_ID_BUNDLE_KEY, user.userId);
                         intent.putExtra(EMPLOYEE_ID_BUNDLER_KEY, employeeId);
-                        startActivity(intent);
-                        requireActivity().finish();
+                        new Handler().postDelayed(() -> {
+                            startActivity(intent);
+                            requireActivity().finish();
+
+                        },1500);
                     }
 
                     @Override
