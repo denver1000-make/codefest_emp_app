@@ -1,7 +1,7 @@
 package com.denprog.codefestapp.destinations.dummy;
 
 import static com.denprog.codefestapp.HomeActivityViewModel.ADMIN_ID_BUNDLE_KEY;
-import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYEE_ID_BUNDLER_KEY;
+import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYEE_ID_BUNDLE_KEY;
 import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYER_ID_BUNDLE_KEY;
 import static com.denprog.codefestapp.HomeActivityViewModel.USER_ID_BUNDLE_KEY;
 
@@ -20,15 +20,11 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.LinearLayout;
 
 import com.denprog.codefestapp.EmployeeActivity;
 import com.denprog.codefestapp.HomeActivity;
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.activities.EmployerActivity;
-import com.denprog.codefestapp.destinations.login.LoginViewModel;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 
@@ -67,7 +63,7 @@ public class DummyFragment extends Fragment {
                     public void employee(User user, int employeeId) {
                         Intent intent = new Intent(requireActivity(), EmployeeActivity.class);
                         intent.putExtra(USER_ID_BUNDLE_KEY, user.userId);
-                        intent.putExtra(EMPLOYEE_ID_BUNDLER_KEY, employeeId);
+                        intent.putExtra(EMPLOYEE_ID_BUNDLE_KEY, employeeId);
                         new Handler().postDelayed(() -> {
                             startActivity(intent);
                             requireActivity().finish();

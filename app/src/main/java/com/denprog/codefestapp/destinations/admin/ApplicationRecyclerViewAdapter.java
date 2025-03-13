@@ -41,12 +41,7 @@ public class ApplicationRecyclerViewAdapter extends RecyclerView.Adapter<Applica
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                itemInterface.view(holder.mItem.userId);
-            }
-        });
+        holder.itemView.setOnClickListener(view -> itemInterface.view(holder.mItem.userId));
         String fullName = holder.mItem.firstName + " " + holder.mItem.middleName + " " + holder.mItem.lastName;
 
         holder.binding.emailDisplay.setText(holder.mItem.email);

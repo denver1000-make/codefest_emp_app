@@ -1,15 +1,13 @@
 package com.denprog.codefestapp.destinations.login;
 
 import static com.denprog.codefestapp.HomeActivityViewModel.ADMIN_ID_BUNDLE_KEY;
-import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYEE_ID_BUNDLER_KEY;
+import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYEE_ID_BUNDLE_KEY;
 import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYER_ID_BUNDLE_KEY;
 import static com.denprog.codefestapp.HomeActivityViewModel.USER_ID_BUNDLE_KEY;
 
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -19,7 +17,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,14 +28,8 @@ import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.activities.EmployerActivity;
 import com.denprog.codefestapp.databinding.FragmentLoginBinding;
 import com.denprog.codefestapp.destinations.dummy.DummyViewModel;
-import com.denprog.codefestapp.room.entity.Admin;
-import com.denprog.codefestapp.room.entity.Employee;
-import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
-import com.denprog.codefestapp.util.UIState;
-
-import java.util.List;
 
 public class LoginFragment extends Fragment {
 
@@ -78,7 +69,7 @@ public class LoginFragment extends Fragment {
                 mViewModel.performRoleBasedRedirect(roleState.user, new DummyViewModel.OnUserRoleLoaded() {
                     @Override
                     public void employee(User user, int employeeId) {
-                        redirect(new Intent(requireActivity(), EmployeeActivity.class), user.userId, EMPLOYEE_ID_BUNDLER_KEY, employeeId);
+                        redirect(new Intent(requireActivity(), EmployeeActivity.class), user.userId, EMPLOYEE_ID_BUNDLE_KEY, employeeId);
                         binding.loginAction.setEnabled(true);
                     }
 
