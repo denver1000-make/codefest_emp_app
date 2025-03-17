@@ -5,7 +5,6 @@ import android.os.Looper;
 
 import androidx.lifecycle.ViewModel;
 
-import com.denprog.codefestapp.destinations.login.LoginViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.Admin;

@@ -2,7 +2,6 @@ package com.denprog.codefestapp.destinations.login;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.view.View;
 
 import androidx.databinding.ObservableField;
 import androidx.lifecycle.MutableLiveData;
@@ -13,7 +12,6 @@ import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
-import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
@@ -23,8 +21,6 @@ import com.denprog.codefestapp.util.Validator;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import javax.inject.Inject;

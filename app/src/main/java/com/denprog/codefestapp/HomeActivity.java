@@ -11,18 +11,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.denprog.codefestapp.databinding.ActivityHomeBinding;
 import com.denprog.codefestapp.databinding.HeaderLayoutBinding;
-import com.denprog.codefestapp.room.entity.User;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.function.Consumer;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

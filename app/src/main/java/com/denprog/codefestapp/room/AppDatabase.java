@@ -1,7 +1,6 @@
 package com.denprog.codefestapp.room;
 
 
-import androidx.room.AutoMigration;
 import androidx.room.Database;
 import androidx.room.RoomDatabase;
 

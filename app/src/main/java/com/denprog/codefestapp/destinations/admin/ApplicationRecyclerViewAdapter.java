@@ -1,15 +1,11 @@
 package com.denprog.codefestapp.destinations.admin;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.denprog.codefestapp.databinding.FragmentApplicationCardBinding;
-import com.denprog.codefestapp.databinding.FragmentJobPostingApplicationItemBinding;
-import com.denprog.codefestapp.destinations.admin.placeholder.PlaceholderContent.PlaceholderItem;
 import com.denprog.codefestapp.room.entity.User;
 
 import java.util.ArrayList;

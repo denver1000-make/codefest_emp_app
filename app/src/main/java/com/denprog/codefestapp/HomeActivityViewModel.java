@@ -9,7 +9,6 @@ import com.denprog.codefestapp.room.entity.User;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 import javax.inject.Inject;
 

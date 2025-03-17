@@ -16,7 +16,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.ActivityEmployerBinding;
 import com.denprog.codefestapp.destinations.employer.EmployerHomeViewModel;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import dagger.hilt.android.AndroidEntryPoint;
 

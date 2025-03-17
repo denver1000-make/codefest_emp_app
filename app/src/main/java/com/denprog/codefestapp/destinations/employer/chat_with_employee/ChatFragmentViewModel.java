@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.PrivateChatItemText;
-import com.denprog.codefestapp.room.entity.PrivateChatThread;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 
 import java.util.ArrayList;

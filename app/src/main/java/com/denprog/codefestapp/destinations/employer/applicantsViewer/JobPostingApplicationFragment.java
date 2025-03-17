@@ -2,38 +2,23 @@ package com.denprog.codefestapp.destinations.employer.applicantsViewer;
 
 import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYER_ID_BUNDLE_KEY;
 
-import android.content.Context;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.denprog.codefestapp.R;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.denprog.codefestapp.databinding.FragmentJobPostingViewerBinding;
-import com.denprog.codefestapp.destinations.employee.dialog.JobPostingApplicationDialogFragmentArgs;
-import com.denprog.codefestapp.destinations.employer.JobPostingRecyclerViewAdapter;
-import com.denprog.codefestapp.destinations.employer.applicantsViewer.placeholder.PlaceholderContent;
-import com.denprog.codefestapp.destinations.login.LoginFragment;
-import com.denprog.codefestapp.room.entity.JobPostingApplication;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
-
-import java.util.List;
 
 public class JobPostingApplicationFragment extends Fragment implements JobApplicantViewerViewModel.FileDownloadProgress {
     private FragmentJobPostingViewerBinding binding;

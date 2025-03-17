@@ -1,10 +1,10 @@
 package com.denprog.codefestapp.destinations.employee.dialog;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.denprog.codefestapp.databinding.FragmentJobPostingApplicationItemBinding;
 import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;

@@ -1,16 +1,14 @@
 package com.denprog.codefestapp.destinations.employer.applicantsViewer;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.employer.applicantsViewer.placeholder.PlaceholderContent.PlaceholderItem;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denprog.codefestapp.databinding.FragmentJobPostingApplicationBinding;
-import com.denprog.codefestapp.room.entity.JobPostingApplication;
 import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
 import java.util.ArrayList;

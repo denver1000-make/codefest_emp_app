@@ -15,11 +15,9 @@ import com.denprog.codefestapp.util.FileUtil;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
 
 import javax.inject.Inject;
 

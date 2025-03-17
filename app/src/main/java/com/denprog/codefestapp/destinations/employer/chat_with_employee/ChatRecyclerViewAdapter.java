@@ -1,16 +1,12 @@
 package com.denprog.codefestapp.destinations.employer.chat_with_employee;
 
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.employer.chat_with_employee.placeholder.PlaceholderContent.PlaceholderItem;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denprog.codefestapp.databinding.FragmentChatItemBinding;
 import com.denprog.codefestapp.room.entity.PrivateChatItemText;
 

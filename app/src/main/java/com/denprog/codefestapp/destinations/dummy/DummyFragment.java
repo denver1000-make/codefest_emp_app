@@ -5,21 +5,19 @@ import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYEE_ID_BUNDLE_K
 import static com.denprog.codefestapp.HomeActivityViewModel.EMPLOYER_ID_BUNDLE_KEY;
 import static com.denprog.codefestapp.HomeActivityViewModel.USER_ID_BUNDLE_KEY;
 
-import androidx.lifecycle.ViewModelProvider;
-
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.denprog.codefestapp.EmployeeActivity;
 import com.denprog.codefestapp.HomeActivity;

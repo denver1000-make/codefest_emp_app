@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.denprog.codefestapp.databinding.FragmentAddJobPostingBinding;
 import com.denprog.codefestapp.databinding.FragmentJobPostingItemBinding;
 import com.denprog.codefestapp.room.entity.JobPosting;
 
