@@ -54,7 +54,7 @@ public class EmployerHomeFragment extends Fragment {
 
         viewModel.empIdMutableLiveData.observe(getViewLifecycleOwner(), integer -> {
             viewModel.getAllJobPosting(integer);
-            NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_employer);
+            NavController navController = Navigation.findNavController(requireActivity(), R.id.employerFragmentContainer);
             binding.addJobpostingAction.setOnClickListener(view1 -> {
                 AddJobPostingFragment addJobPostingFragment = new AddJobPostingFragment();
                 addJobPostingFragment.show(getParentFragmentManager(), "ADD_JOB_POSTING_DIALOG");

@@ -28,7 +28,7 @@ public class AdminHomeFragment extends Fragment {
         binding = FragmentApplicationListBinding.inflate(inflater, container, false);
         RecyclerView rcv = binding.getRoot();
         rcv.setLayoutManager(new LinearLayoutManager(requireContext()));
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_home);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.adminFragmentContainerView);
 
         this.adapter = new ApplicationRecyclerViewAdapter((int userId) -> {
             navController.navigate(AdminHomeFragmentDirections.actionAdminHomeFragmentToViewUserFragment(userId));

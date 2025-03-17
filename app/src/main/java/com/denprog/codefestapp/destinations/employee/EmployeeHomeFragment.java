@@ -20,6 +20,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.denprog.codefestapp.EmployeeActivityViewModel;
@@ -63,7 +64,7 @@ public class EmployeeHomeFragment extends Fragment {
         this.viewModel = new ViewModelProvider(requireActivity()).get(EmployeeHomeViewModel.class);
         this.mainViewModel = new ViewModelProvider(requireActivity()).get(EmployeeActivityViewModel.class);
 
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_employee);
+        NavController navController = NavHostFragment.findNavController(requireParentFragment());
         this.viewModel.employeStateMutableLiveData.observe(getViewLifecycleOwner(), employeeIdUIState -> {
             if (employeeIdUIState instanceof UIState.Success) {
                 EmployeeActivityViewModel.EmployeeId employeeIdCredentials = ((UIState.Success<EmployeeActivityViewModel.EmployeeId>) employeeIdUIState).data;

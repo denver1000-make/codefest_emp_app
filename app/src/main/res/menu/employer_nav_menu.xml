@@ -8,7 +8,7 @@
         android:title="Job Posting" />
 
     <item
-        android:id="@+id/profileFragment"
+        android:id="@+id/employerProfile"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="Profile" />
 
