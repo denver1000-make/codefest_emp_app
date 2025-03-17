@@ -39,14 +39,15 @@ public class ChatFragment extends Fragment {
         this.viewModel = new ViewModelProvider(requireActivity()).get(ChatFragmentViewModel.class);
         this.binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
         ChatFragmentArgs args = ChatFragmentArgs.fromBundle(getArguments());
-        this.adapter = new ChatRecyclerViewAdapter(args.getEmployerId());
+
+        this.adapter = new ChatRecyclerViewAdapter(args.getSenderEmail());
         this.binding.list.setAdapter(adapter);
         this.binding.setViewModel(this.viewModel);
         this.binding.sendChatAction.setOnClickListener(view2 -> {
             String chatContent = viewModel.chatContent.get();
             long epochSecond = TimeUtil.getCurrentTimeSeconds();
             String formatted = TimeUtil.getFormattedTime(epochSecond);
-            viewModel.sendChat(epochSecond, formatted, chatContent, args.getEmployerId(), args.getThreadId(), new OnOperationSuccessful<Void>() {
+            viewModel.sendChat(epochSecond, formatted, chatContent, args.getSenderEmail(), args.getEmployerId(), args.getThreadId(), new OnOperationSuccessful<Void>() {
                 @Override
                 public void onSuccess(Void data) {
                     viewModel.chatContent.set("");

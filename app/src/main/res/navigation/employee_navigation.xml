@@ -32,4 +32,30 @@
             android:name="jobPostingId"
             app:argType="integer" />
     </fragment>
+    <fragment
+        android:id="@+id/employeeInbox"
+        android:name="com.denprog.codefestapp.destinations.employee.inbox.InboxFragment"
+        android:label="Inbox"
+        tools:layout="@layout/fragment_chat_thread_list" >
+        <action
+            android:id="@+id/action_employeeInbox_to_chatEmployerFragment"
+            app:destination="@id/chatEmployerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatEmployerFragment"
+        android:name="com.denprog.codefestapp.destinations.employee.inbox.chat_with_employer.ChatEmployerFragment"
+        android:label="ChatEmployerFragment" >
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+        <argument
+            android:name="employerId"
+            app:argType="integer" />
+        <argument
+            android:name="threadId"
+            app:argType="integer" />
+        <argument
+            android:name="email"
+            app:argType="string" />
+    </fragment>
 </navigation>

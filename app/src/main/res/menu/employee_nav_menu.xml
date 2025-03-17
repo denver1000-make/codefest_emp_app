@@ -10,4 +10,8 @@
         android:title="Home"
         android:icon="@drawable/baseline_home_24"
         android:id="@+id/employeeHomeFragment"/>
+    <item
+        android:id="@+id/employeeInbox"
+        android:title="Inbox"
+        android:icon="@drawable/baseline_email_24"/>
 </menu>

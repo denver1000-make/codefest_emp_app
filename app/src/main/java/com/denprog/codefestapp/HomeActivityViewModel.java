@@ -20,6 +20,7 @@ public class HomeActivityViewModel extends ViewModel {
     public static final String EMPLOYER_ID_BUNDLE_KEY = "employer_id";
     public static final String EMPLOYEE_ID_BUNDLE_KEY = "employee_id";
     public static final String ADMIN_ID_BUNDLE_KEY = "admin_id";
+    public static final String EMAIL_ID_BUNDLE_KEY = "email_id";
     public MutableLiveData<Integer> userIdMutableLiveData = new MutableLiveData<>(-1);
 
     AppDao appDao;

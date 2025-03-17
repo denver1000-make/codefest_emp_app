@@ -44,5 +44,8 @@
         <argument
             android:name="threadId"
             app:argType="integer" />
+        <argument
+            android:name="senderEmail"
+            app:argType="string" />
     </fragment>
 </navigation>

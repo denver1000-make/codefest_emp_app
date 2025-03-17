@@ -17,10 +17,10 @@ import java.util.List;
 public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerViewAdapter.ViewHolder> {
 
     private final List<PrivateChatItemText> mValues = new ArrayList<PrivateChatItemText>(Collections.emptyList());
-    int senderId;
+    String email;
 
-    public ChatRecyclerViewAdapter(int senderId) {
-        this.senderId = senderId;
+    public ChatRecyclerViewAdapter(String email) {
+        this.email = email;
     }
 
     public void refreshList(List<PrivateChatItemText> items) {
@@ -40,7 +40,7 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).chatContent);
 
-        if (senderId == holder.mItem.senderId) {
+        if (email.equals(holder.mItem.senderEmail)) {
             holder.binding.parentLayout.setGravity(Gravity.END);
         } else {
             holder.binding.parentLayout.setGravity(Gravity.START);

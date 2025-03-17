@@ -19,9 +19,10 @@ import com.denprog.codefestapp.room.entity.PrivateChatThread;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.room.view.ChatThreadWithEmployeeName;
 import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
-@Database(version = 6, entities = {
+@Database(version = 9, entities = {
         User.class,
         Employer.class,
         Employee.class,
@@ -36,7 +37,7 @@ import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
         PrivateChatThread.class,
         PrivateChatItemText.class,
         PrivateChatItem.class},
-        views = {JobPostingApplicationAndEmployeeInfo.class},
+        views = {JobPostingApplicationAndEmployeeInfo.class, ChatThreadWithEmployeeName.class},
         exportSchema = true
 )
 public abstract class AppDatabase extends RoomDatabase {

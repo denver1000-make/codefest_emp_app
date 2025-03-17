@@ -26,7 +26,10 @@ public class EmployeeActivity extends AppCompatActivity {
 
 
         setSupportActionBar(binding.employeeAppBar.toolbar);
-        this.appBarConfiguration = new AppBarConfiguration.Builder(R.id.employeeHomeFragment, R.id.employeeProfileFragment)
+        this.appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.employeeHomeFragment,
+                R.id.employeeProfileFragment,
+                R.id.employeeInbox)
                 .setOpenableLayout(binding.container)
                 .build();
 

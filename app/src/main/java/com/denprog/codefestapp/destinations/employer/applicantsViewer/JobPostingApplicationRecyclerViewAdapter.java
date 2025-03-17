@@ -49,7 +49,7 @@ public class JobPostingApplicationRecyclerViewAdapter extends RecyclerView.Adapt
             }
         });
         holder.binding.openChatAction.setOnClickListener(view -> {
-             userItemInteraction.onChat(holder.mItem.employeeId);
+             userItemInteraction.onChat(holder.mItem.employeeId, holder.mItem.email);
         });
     }
 
@@ -80,7 +80,7 @@ public class JobPostingApplicationRecyclerViewAdapter extends RecyclerView.Adapt
     }
 
     public interface UserItemInteraction {
-        void onChat(int employeeId);
+        void onChat(int employeeId, String email);
         void onDownloadFiles(int jobPostingApplication);
         void onShowDecisionDialog();
     }

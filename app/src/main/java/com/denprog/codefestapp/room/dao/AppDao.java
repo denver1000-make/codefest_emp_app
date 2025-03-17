@@ -20,6 +20,7 @@ import com.denprog.codefestapp.room.entity.PrivateChatThread;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.room.view.ChatThreadWithEmployeeName;
 import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
 import java.util.List;
@@ -101,4 +102,7 @@ public interface AppDao {
 
     @Insert
     void insertChat(PrivateChatItemText privateChatItemText);
+
+    @Query("SELECT * FROM ChatThreadWithEmployeeName WHERE employeeId = :employeeId")
+    List<ChatThreadWithEmployeeName> getAllChatThreadWithEmployeeId(int employeeId);
 }

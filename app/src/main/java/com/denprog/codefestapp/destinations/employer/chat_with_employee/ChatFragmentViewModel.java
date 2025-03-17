@@ -59,11 +59,12 @@ public class ChatFragmentViewModel extends ViewModel {
         });
     }
 
-    public void sendChat(long timeInSecond, String timeStamp, String content, int senderId, int threadId, OnOperationSuccessful<Void> onOperationSuccessful) {
+    // TODO: Remove content parameter
+    public void sendChat(long timeInSecond, String timeStamp, String content, String email, int senderId, int threadId, OnOperationSuccessful<Void> onOperationSuccessful) {
         CompletableFuture<Void> sendingChat = CompletableFuture.supplyAsync(new Supplier<Void>() {
             @Override
             public Void get() {
-                appDao.insertChat(new PrivateChatItemText(timeInSecond, timeStamp, senderId, threadId, chatContent.get()));
+                appDao.insertChat(new PrivateChatItemText(timeInSecond, timeStamp, senderId, email, threadId, chatContent.get()));
                 return null;
             }
         });

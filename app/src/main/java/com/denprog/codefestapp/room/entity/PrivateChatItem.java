@@ -11,11 +11,13 @@ public class PrivateChatItem {
     public String timeStamp;
     public int senderId;
     public int threadId;
+    public String senderEmail;
 
-    public PrivateChatItem(long timeStampSecond, String timeStamp, int senderId, int threadId) {
+    public PrivateChatItem(long timeStampSecond, String timeStamp, int senderId, String senderEmail, int threadId) {
         this.timeStampSecond = timeStampSecond;
         this.timeStamp = timeStamp;
         this.senderId = senderId;
+        this.senderEmail = senderEmail;
         this.threadId = threadId;
     }
 }
