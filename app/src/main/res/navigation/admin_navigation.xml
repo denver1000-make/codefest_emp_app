@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/adminHomeFragment"
         android:name="com.denprog.codefestapp.destinations.admin.AdminHomeFragment"
-        android:label="fragment_application_list"
-        tools:layout="@layout/fragment_application_list" >
+        android:label="Applications List"
+        tools:layout="@layout/fragment_application_list">
         <action
             android:id="@+id/action_adminHomeFragment_to_viewUserFragment"
             app:destination="@id/viewUserFragment"
@@ -42,5 +42,5 @@
     <fragment
         android:id="@+id/adminProfile"
         android:name="com.denprog.codefestapp.destinations.profile.ProfileFragment"
-        android:label="ProfileFragment" />
+        android:label="Profile" />
 </navigation>

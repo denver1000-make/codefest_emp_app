@@ -25,6 +25,7 @@ public class EmployerActivity extends AppCompatActivity {
 
     private ActivityEmployerBinding binding;
     private EmployerHomeViewModel mainViewModel;
+    AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +35,18 @@ public class EmployerActivity extends AppCompatActivity {
         this.mainViewModel = new ViewModelProvider(this).get(EmployerHomeViewModel.class);
         setContentView(binding.getRoot());
         Intent intent = getIntent();
-
+        setSupportActionBar(binding.employerAppBar.toolbar);
         int employerId = intent.getIntExtra(EMPLOYER_ID_BUNDLE_KEY, -1);
         if (employerId != -1) {
             mainViewModel.empIdMutableLiveData.setValue(employerId);
-            BottomNavigationView navView = findViewById(R.id.nav_view);
-            AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.employerHomeFragment)
+            appBarConfiguration = new AppBarConfiguration.Builder(
+                    R.id.employerHomeFragment, R.id.employerProfile)
+                    .setOpenableLayout(binding.container)
                     .build();
 
-            NavController navController =NavHostFragment.findNavController(binding.navHostFragmentActivityEmployer.getFragment());
-            NavigationUI.setupWithNavController(binding.navView, navController);
+            NavController navController = NavHostFragment.findNavController(binding.employerAppBar.employerContent.employerFragmentContainer.getFragment());
+            NavigationUI.setupWithNavController(binding.employerNavigation, navController);
+            NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         } else {
             Toast.makeText(this, "Error In Loading the Employer", Toast.LENGTH_SHORT).show();
             finish();
@@ -52,4 +54,9 @@ public class EmployerActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController =NavHostFragment.findNavController(binding.employerAppBar.employerContent.employerFragmentContainer.getFragment());
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
+    }
 }

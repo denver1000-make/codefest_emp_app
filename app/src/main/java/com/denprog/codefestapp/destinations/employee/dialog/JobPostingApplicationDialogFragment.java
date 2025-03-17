@@ -65,7 +65,7 @@ public class JobPostingApplicationDialogFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentJobPostingApplicationDialogListBinding.inflate(getLayoutInflater(), container, false);
+        binding = FragmentJobPostingApplicationDialogListBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -94,7 +94,7 @@ public class JobPostingApplicationDialogFragment extends Fragment {
             }
         });
 
-        this.viewModel.credentialStatus.observe(requireActivity(), jobPostingIdAndEmployeeIdUIState -> {
+        this.viewModel.credentialStatus.observe(getViewLifecycleOwner(), jobPostingIdAndEmployeeIdUIState -> {
             if (jobPostingIdAndEmployeeIdUIState instanceof UIState.Success) {
                 JobPostingIdAndEmployeeId jobPostingIdAndEmployeeId = ((UIState.Success<JobPostingIdAndEmployeeId>) jobPostingIdAndEmployeeIdUIState).data;
                 int employeeId1 = jobPostingIdAndEmployeeId.employeeId;

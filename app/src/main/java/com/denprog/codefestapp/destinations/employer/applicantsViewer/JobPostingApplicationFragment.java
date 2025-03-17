@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +83,7 @@ public class JobPostingApplicationFragment extends Fragment implements JobApplic
     }
 
     public void setupRcv(int employerId) {
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_employer);
+        NavController navController = NavHostFragment.findNavController(requireParentFragment());
         this.adapter = new JobPostingApplicationRecyclerViewAdapter(new JobPostingApplicationRecyclerViewAdapter.UserItemInteraction() {
             @Override
             public void onChat(int employeeId) {

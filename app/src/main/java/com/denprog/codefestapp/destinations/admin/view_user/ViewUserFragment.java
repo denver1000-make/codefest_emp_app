@@ -39,7 +39,7 @@ public class ViewUserFragment extends Fragment {
         this.adminHomeViewModel = new ViewModelProvider(requireActivity()).get(AdminHomeViewModel.class);
         int userId = ViewUserFragmentArgs.fromBundle(getArguments()).getUserId();
         mViewModel.loadUser(userId);
-        NavController navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_activity_home);
+        NavController navController = Navigation.findNavController(requireActivity(), R.id.adminFragmentContainerView);
         mViewModel.userToViewMutableLiveData.observe(getViewLifecycleOwner(), userUIState -> {
             if (userUIState instanceof UIState.Fail) {
                 Toast.makeText(requireContext(), ((UIState.Fail<User>) userUIState).message, Toast.LENGTH_SHORT).show();
