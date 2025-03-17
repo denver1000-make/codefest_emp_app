@@ -1,5 +1,6 @@
 package com.denprog.codefestapp.room.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
@@ -14,9 +15,12 @@ import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.room.entity.JobPostingApplication;
 import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
+import com.denprog.codefestapp.room.entity.PrivateChatItemText;
+import com.denprog.codefestapp.room.entity.PrivateChatThread;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
 import java.util.List;
 
@@ -76,10 +80,25 @@ public interface AppDao {
     long insertApplication(JobPostingApplication jobPostingApplication);
     @Insert
     void insertApplicationFile(JobPostingApplicationFile jobPostingApplicationFile);
-
     @Query("SELECT * FROM JobPostingApplication WHERE employeeId =:employeeId AND jobPostingId =:jobPostingId")
     List<JobPostingApplication> getJobPostingApplicationByEmployeeIdAndJobPostingId(int employeeId, int jobPostingId);
-
     @Update
     void updateUser(User user);
+    @Query("SELECT * FROM JobPostingApplicationAndEmployeeInfo WHERE jobPostingId =:jobPostingId")
+    LiveData<List<JobPostingApplicationAndEmployeeInfo>> getAllJobPostingApplicationById(int jobPostingId);
+
+    @Query("SELECT * FROM JobPostingApplicationFile WHERE jobPostingApplicationId =:jobPostingApplicationId")
+    List<JobPostingApplicationFile> getAllFiles(int jobPostingApplicationId);
+
+    @Query("SELECT * FROM PrivateChatThread WHERE employeeId =:employeeId AND employerId = :employerId")
+    List<PrivateChatThread> getAllChatThread(int employeeId, int employerId);
+
+    @Insert
+    long insertChatThread(PrivateChatThread privateChatThread);
+
+    @Query("SELECT * FROM PrivateChatItemText WHERE threadId = :threadId ORDER BY timeStampSecond")
+    List<PrivateChatItemText> getAllChatItem(int threadId);
+
+    @Insert
+    void insertChat(PrivateChatItemText privateChatItemText);
 }

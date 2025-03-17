@@ -28,8 +28,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
@@ -125,7 +123,7 @@ public class RegisterViewModel extends ViewModel {
         File credentialFile = new File(credentialFolder, actualFileName);
         try {
             if (!credentialFile.createNewFile()) {
-                String extension = FileUtil.pathExtract(actualFileName);
+                String extension = FileUtil.getExtension(actualFileName);
                 if (extension != null) {
                     String newFileName = IDUtil.generateRandomCharacters(5) + "." + extension;
                     credentialFile = new File(credentialFolder, newFileName);

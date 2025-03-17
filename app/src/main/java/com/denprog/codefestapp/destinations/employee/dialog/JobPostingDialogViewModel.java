@@ -1,5 +1,6 @@
 package com.denprog.codefestapp.destinations.employee.dialog;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -10,9 +11,11 @@ import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.JobPostingApplication;
 import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
+import com.denprog.codefestapp.util.FileUtil;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -47,11 +50,8 @@ public class JobPostingDialogViewModel extends ViewModel {
     }
 
 
-    public void insertApplication(int employeeId, int jobPostingId, OnOperationSuccessful<Void> onOperationSuccessful) {
+    public void insertApplication(int employeeId, int jobPostingId, Context context, OnOperationSuccessful<Void> onOperationSuccessful) {
         onOperationSuccessful.onLoading();
-
-
-
         List<JobPostingApplicationFile> jobPostingApplicationFileToInsert = jobPostingApplicationFiles.getValue();
         if (!jobPostingApplicationFileToInsert.isEmpty()) {
             CompletableFuture<Integer> insertApplication = CompletableFuture.supplyAsync(() -> {
@@ -65,9 +65,13 @@ public class JobPostingDialogViewModel extends ViewModel {
                 jobPostingApplicationFileToInsert.forEach(jobPostingApplicationFile -> {
                     jobPostingApplicationFile.employeeId = employeeId;
                     jobPostingApplicationFile.jobPostingApplicationId = applicationId;
+                    jobPostingApplicationFile.pathOfFile = FileUtil.insertUriToInternalDirectory(jobPostingApplicationFile.pathOfFile, FileUtil.APPLICATION_FILE_LOC, employeeId + "", jobPostingApplicationFile.uri, context);
                     appDao.insertApplicationFile(jobPostingApplicationFile);
                 });
                 handler.post(() -> onOperationSuccessful.onSuccess(null));
+            }).exceptionally(throwable -> {
+                onOperationSuccessful.onError(throwable.getLocalizedMessage());
+                return null;
             });
             insertApplication.exceptionally(throwable -> {
                 handler.post(() -> onOperationSuccessful.onError(throwable.getLocalizedMessage()));

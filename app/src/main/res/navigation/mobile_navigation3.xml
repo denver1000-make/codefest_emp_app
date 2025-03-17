@@ -8,10 +8,41 @@
         android:id="@+id/employerHomeFragment"
         android:name="com.denprog.codefestapp.destinations.employer.EmployerHomeFragment"
         android:label="fragment_employer_home"
-        tools:layout="@layout/fragment_employer_home" />
+        tools:layout="@layout/fragment_employer_home" >
+        <action
+            android:id="@+id/action_employerHomeFragment_to_jobPostingApplicationFragment"
+            app:destination="@id/jobPostingApplicationFragment" />
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.denprog.codefestapp.destinations.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/jobPostingApplicationFragment"
+        android:name="com.denprog.codefestapp.destinations.employer.applicantsViewer.JobPostingApplicationFragment"
+        android:label="fragment_job_posting_viewer"
+        tools:layout="@layout/fragment_job_posting_viewer" >
+        <argument
+            android:name="jobPostingId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_jobPostingApplicationFragment_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.denprog.codefestapp.destinations.employer.chat_with_employee.ChatFragment"
+        android:label="fragment_chat_list"
+        tools:layout="@layout/fragment_chat_list" >
+        <argument
+            android:name="employeeId"
+            app:argType="integer" />
+        <argument
+            android:name="employerId"
+            app:argType="integer" />
+        <argument
+            android:name="threadId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

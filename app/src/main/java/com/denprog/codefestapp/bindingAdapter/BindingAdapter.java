@@ -3,27 +3,30 @@ package com.denprog.codefestapp.bindingAdapter;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 import androidx.databinding.InverseBindingAdapter;
 import androidx.databinding.InverseBindingListener;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputEditText;
 
 public class BindingAdapter {
 
 
-    @androidx.databinding.BindingAdapter("android:text")
-    public static void setFloat(TextInputEditText editText, float value) {
-        if (!editText.toString().equals(String.valueOf(value))) {
+    @androidx.databinding.BindingAdapter("floatValue")
+    public static void setFloat(TextInputEditText editText, Float value) {
+        if (value != null && !editText.toString().equals(String.valueOf(value))) {
             editText.setText(String.valueOf(value));
         }
     }
 
-    @InverseBindingAdapter(attribute = "android:text", event = "textAttrChanged")
+    @InverseBindingAdapter(attribute = "floatValue", event = "floatValueAttrChange")
     public static float getFloat(TextInputEditText view) {
         try {
             return Float.parseFloat(view.getText().toString());
@@ -32,7 +35,7 @@ public class BindingAdapter {
         }
     }
 
-    @androidx.databinding.BindingAdapter("textAttrChanged")
+    @androidx.databinding.BindingAdapter("floatValueAttrChange")
     public static void setListener(TextInputEditText editText, final InverseBindingListener listener) {
         editText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,5 +85,18 @@ public class BindingAdapter {
         return spinner.getSelectedItem().toString();
     }
 
+
+    @androidx.databinding.BindingAdapter("android:layout_gravity")
+    public static void setGravity(View view, Integer integer) {
+        if (integer == null) return;
+
+        ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+        if (layoutParams instanceof LinearLayout.LayoutParams) {
+            ((LinearLayout.LayoutParams) layoutParams).gravity = integer;
+            view.setLayoutParams(layoutParams);
+        } else if (layoutParams instanceof RecyclerView.LayoutParams) {
+
+        }
+    }
 
 }

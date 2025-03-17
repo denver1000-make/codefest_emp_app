@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResult;
@@ -40,16 +41,18 @@ import java.util.List;
 public class JobPostingApplicationDialogFragment extends Fragment {
     public static final String EMPLOYEE_ID_BUNDLE_KEY = "EMPLOYEE_ID";
     public static final String JOB_POSTING_ID_BUNDLE_KEY = "JOB_POSTING_ID";
-
     JobPostingDialogViewModel viewModel;
     ActivityResultLauncher<Intent> filePicker = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), o -> {
         if (o.getResultCode() == Activity.RESULT_OK && o.getData() != null) {
             if (o.getData().getData() != null) {
-                String filePath = FileUtil.getFileName(requireContext(), o.getData().getData());
-                viewModel.addFile(new JobPostingApplicationFile(filePath));
+                Uri uri = o.getData().getData();
+                String filePath = FileUtil.getFileName(requireContext(), uri);
+                JobPostingApplicationFile jobPostingApplicationFile = new JobPostingApplicationFile(filePath);
+                jobPostingApplicationFile.setUri(uri);
+                viewModel.addFile(jobPostingApplicationFile);
             }
         }
-    });;
+    });
     FragmentJobPostingApplicationDialogListBinding binding;
     ApplicationFileRecyclerViewAdapter adapter;
 
@@ -62,7 +65,7 @@ public class JobPostingApplicationDialogFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentJobPostingApplicationDialogListBinding.inflate(getLayoutInflater());
+        binding = FragmentJobPostingApplicationDialogListBinding.inflate(getLayoutInflater(), container, false);
         return binding.getRoot();
     }
 
@@ -107,7 +110,7 @@ public class JobPostingApplicationDialogFragment extends Fragment {
                     filePicker.launch(intent);
                 });
 
-                binding.applyForJob.setOnClickListener(view1 -> viewModel.insertApplication(employeeId1, jobPostingId1, new OnOperationSuccessful<>() {
+                binding.applyForJob.setOnClickListener(view1 -> viewModel.insertApplication(employeeId1, jobPostingId1, requireContext(), new OnOperationSuccessful<>() {
                     @Override
                     public void onSuccess(Void data) {
                         binding.addFileAction.setEnabled(true);

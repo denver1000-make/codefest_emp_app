@@ -1,5 +1,7 @@
 package com.denprog.codefestapp.room.entity;
 
+import android.net.Uri;
+
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
@@ -25,6 +27,8 @@ public class JobPostingApplicationFile {
     public String pathOfFile;
     public int employeeId;
     public int jobPostingApplicationId;
+    @Ignore
+    public Uri uri;
 
     @Ignore
     public JobPostingApplicationFile(String pathOfFile, int employeeId, int jobPostingApplicationId) {
@@ -40,5 +44,9 @@ public class JobPostingApplicationFile {
 
     public JobPostingApplicationFile() {
 
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
     }
 }

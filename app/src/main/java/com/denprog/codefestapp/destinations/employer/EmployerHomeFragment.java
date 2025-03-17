@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -61,11 +62,12 @@ public class EmployerHomeFragment extends Fragment {
             getParentFragmentManager().setFragmentResultListener(AddJobPostingFragment.resultKey, getViewLifecycleOwner(), (requestKey, result) -> {
                 viewModel.getAllJobPosting(integer);
             });
+            getParentFragmentManager().setFragmentResultListener(AddJobPostingFragment.REDIRECT_TO_APPLICANTS, getViewLifecycleOwner(), (requestKey, result) -> {
+                int jobPostingId = result.getInt(AddJobPostingFragment.JOB_POSTING_REDIRECT_BUNDLE_KEY, -1);
+                if (jobPostingId != -1) {
+                    navController.navigate(EmployerHomeFragmentDirections.actionEmployerHomeFragmentToJobPostingApplicationFragment(jobPostingId));
+                }
+            });
         });
-
-
     }
-
-
-
 }

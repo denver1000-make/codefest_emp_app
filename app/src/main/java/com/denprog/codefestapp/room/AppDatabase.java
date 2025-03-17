@@ -14,11 +14,15 @@ import com.denprog.codefestapp.room.entity.Employer;
 import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.room.entity.JobPostingApplication;
 import com.denprog.codefestapp.room.entity.JobPostingApplicationFile;
+import com.denprog.codefestapp.room.entity.PrivateChatItem;
+import com.denprog.codefestapp.room.entity.PrivateChatItemText;
+import com.denprog.codefestapp.room.entity.PrivateChatThread;
 import com.denprog.codefestapp.room.entity.ReviewStatus;
 import com.denprog.codefestapp.room.entity.SavedUserCredentials;
 import com.denprog.codefestapp.room.entity.User;
+import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
-@Database(version = 3, entities = {
+@Database(version = 6, entities = {
         User.class,
         Employer.class,
         Employee.class,
@@ -29,7 +33,11 @@ import com.denprog.codefestapp.room.entity.User;
         ReviewStatus.class,
         SavedUserCredentials.class,
         JobPostingApplicationFile.class,
-        JobPostingApplication.class},
+        JobPostingApplication.class,
+        PrivateChatThread.class,
+        PrivateChatItemText.class,
+        PrivateChatItem.class},
+        views = {JobPostingApplicationAndEmployeeInfo.class},
         exportSchema = true
 )
 public abstract class AppDatabase extends RoomDatabase {

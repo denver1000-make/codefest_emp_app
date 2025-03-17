@@ -51,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat"
                         android:hint="Posting Description"
-                        android:text="@={viewModel.postingDescription}" />
+                        android:text="@={viewModel.postingDescription}"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <TextView
@@ -87,7 +87,7 @@
                             android:fontFamily="@font/montserrat"
                             android:hint="Salary"
                             android:inputType="numberDecimal"
-                            android:text="@={viewModel.postingMinSalary}" />
+                            app:floatValue="@={viewModel.postingMinSalary}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -103,7 +103,7 @@
                             android:fontFamily="@font/montserrat"
                             android:hint="Salary"
                             android:inputType="numberDecimal"
-                            android:text="@={viewModel.postingMaxSalary}" />
+                            floatValue="@={viewModel.postingMaxSalary}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>
@@ -118,6 +118,12 @@
                     android:fontFamily="@font/montserrat_bold"
                     android:text="Add"
                     android:textColor="@color/white" />
+
+                <Button
+                    android:id="@+id/view_applicants_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="View Applicants" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

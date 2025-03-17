@@ -11,6 +11,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,14 +30,14 @@ import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
 public class AddJobPostingFragment extends DialogFragment {
-
-
     public static final String[] listOfCategories = new String[]{"Finance", "IT", "Art"};
     public static final String resultKey = "ID_OF_JOB_POSTING";
     public static final String RESULT_KEY_OF_UPDATE = "UPDATE_RESULT";
     public static final String bundleOfIntegerId = "ID_OF_ADDED_JOB_POSTING";
-
     public static final String bundleOfUpdatedInteger = "ID_OF_UPDATED_INTEGER_ID";
+    public static final String REDIRECT_TO_APPLICANTS = "REDIRECT_TO_APPLICANTS";
+    public static final String JOB_POSTING_REDIRECT_BUNDLE_KEY = "JOB_POSTING_ID_KEY_FOR_REDIRECT";
+
     private AddJobPostingViewModel mViewModel;
     private EmployerHomeViewModel employerHomeViewModel;
     private FragmentAddJobPostingBinding binding;
@@ -54,12 +56,12 @@ public class AddJobPostingFragment extends DialogFragment {
         binding.setViewModel(mViewModel);
 
         Bundle bundle = getArguments();
-
         if (bundle != null) {
             int postingIdKey = getArguments().getInt(EmployerHomeFragment.POSTING_ID_BUNDLE_KEY, -1);
             if (postingIdKey != -1) {
                 binding.addPostingAction.setText("Update");
                 mViewModel.loadData(postingIdKey);
+                setUpViewApplicantButton(postingIdKey);
                 mViewModel.jobPosting.observe(requireActivity(), jobPostingUIState -> {
                     if (jobPostingUIState instanceof UIState.Success) {
                         JobPosting jobPosting = ((UIState.Success<JobPosting>) jobPostingUIState).data;
@@ -92,6 +94,7 @@ public class AddJobPostingFragment extends DialogFragment {
                 }));
             }
         } else {
+            hideViewApplicationButton();
             binding.addPostingAction.setOnClickListener(view -> {
                 Integer empId = employerHomeViewModel.empIdMutableLiveData.getValue();
                 if (empId != null) {
@@ -103,7 +106,6 @@ public class AddJobPostingFragment extends DialogFragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, AddJobPostingFragment.listOfCategories);
         binding.categorySpinner.setAdapter(adapter);
-
 
         mViewModel.mutableLiveDataOfInsertedId.observe(requireActivity(), integerUIState -> {
             if (integerUIState instanceof UIState.Success) {
@@ -125,6 +127,24 @@ public class AddJobPostingFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void hideViewApplicationButton() {
+        binding.viewApplicantsButton.setVisibility(View.GONE);
+    }
+
+    public void setUpViewApplicantButton(int jobPostingId) {
+        binding.viewApplicantsButton.setVisibility(View.VISIBLE);
+        binding.viewApplicantsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle bundle = new Bundle();
+                bundle.putInt(JOB_POSTING_REDIRECT_BUNDLE_KEY, jobPostingId);
+                getParentFragmentManager().setFragmentResult(REDIRECT_TO_APPLICANTS, bundle);
+                dismissNow();
+            }
+        });
+
     }
 
     public void clearData() {
