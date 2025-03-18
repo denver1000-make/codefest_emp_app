@@ -87,22 +87,23 @@ public interface AppDao {
     void updateUser(User user);
     @Query("SELECT * FROM JobPostingApplicationAndEmployeeInfo WHERE jobPostingId =:jobPostingId")
     LiveData<List<JobPostingApplicationAndEmployeeInfo>> getAllJobPostingApplicationById(int jobPostingId);
-
     @Query("SELECT * FROM JobPostingApplicationFile WHERE jobPostingApplicationId =:jobPostingApplicationId")
     List<JobPostingApplicationFile> getAllFiles(int jobPostingApplicationId);
-
     @Query("SELECT * FROM PrivateChatThread WHERE employeeId =:employeeId AND employerId = :employerId")
     List<PrivateChatThread> getAllChatThread(int employeeId, int employerId);
-
     @Insert
     long insertChatThread(PrivateChatThread privateChatThread);
-
     @Query("SELECT * FROM PrivateChatItemText WHERE threadId = :threadId ORDER BY timeStampSecond")
     List<PrivateChatItemText> getAllChatItem(int threadId);
-
     @Insert
     void insertChat(PrivateChatItemText privateChatItemText);
-
     @Query("SELECT * FROM ChatThreadWithEmployeeName WHERE employeeId = :employeeId")
     List<ChatThreadWithEmployeeName> getAllChatThreadWithEmployeeId(int employeeId);
+    @Query("SELECT * FROM JobPosting " +
+            "WHERE " +
+            "minSalary >= CASE WHEN :minSalary = -1 THEN minSalary ELSE :minSalary END AND " +
+            "maxSalary <= CASE WHEN :maxSalary = -1 THEN maxSalary ELSE :maxSalary END AND " +
+            "postingCategory = CASE WHEN :category IS NULL THEN postingCategory ELSE :category END AND " +
+            "postingName LIKE CASE WHEN :searchQ IS NULL THEN '%' || postingName|| '%' ELSE '%' || :searchQ || '%' END")
+    List<JobPosting> filterByAllPosting(int minSalary, int maxSalary, String category, String searchQ);
 }

@@ -1,11 +1,14 @@
 package com.denprog.codefestapp.destinations.employer;
 
+import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.denprog.codefestapp.destinations.employee.EmployeeHomeViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.util.UIState;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -19,7 +22,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class EmployerHomeViewModel extends ViewModel {
 
-    public MutableLiveData<List<JobPosting>> jobPostingMutableLiveData = new MutableLiveData<List<JobPosting>>();
+    MutableLiveData<UIState<EmployeeHomeViewModel.SearchQueryAndList>> searchUiStateMutableLiveData = new MediatorLiveData<>(null);
     public MutableLiveData<Integer> empIdMutableLiveData = new MutableLiveData<>(null);
 
 
@@ -39,7 +42,7 @@ public class EmployerHomeViewModel extends ViewModel {
         }).thenAcceptAsync(new Consumer<List<JobPosting>>() {
             @Override
             public void accept(List<JobPosting> jobPostingList) {
-                jobPostingMutableLiveData.postValue(jobPostingList);
+                searchUiStateMutableLiveData.postValue(new UIState.Success<>(new EmployeeHomeViewModel.SearchQueryAndList(jobPostingList, null)));
             }
         });
     }

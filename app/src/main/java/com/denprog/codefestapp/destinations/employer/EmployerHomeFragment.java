@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,7 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
+import com.denprog.codefestapp.destinations.employee.EmployeeHomeViewModel;
 import com.denprog.codefestapp.destinations.employer.addJobPositng.AddJobPostingFragment;
+import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.util.UIState;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EmployerHomeFragment extends Fragment {
 
@@ -46,10 +53,6 @@ public class EmployerHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         this.viewModel = new ViewModelProvider(requireActivity()).get(EmployerHomeViewModel.class);
-        viewModel.jobPostingMutableLiveData.observe(getViewLifecycleOwner(), jobPostingList -> {
-            adapter.refreshList(jobPostingList);
-        });
-
         viewModel.empIdMutableLiveData.observe(getViewLifecycleOwner(), integer -> {
             viewModel.getAllJobPosting(integer);
             NavController navController = Navigation.findNavController(requireActivity(), R.id.employerFragmentContainer);
@@ -60,6 +63,7 @@ public class EmployerHomeFragment extends Fragment {
             getParentFragmentManager().setFragmentResultListener(AddJobPostingFragment.resultKey, getViewLifecycleOwner(), (requestKey, result) -> {
                 viewModel.getAllJobPosting(integer);
             });
+            setupSearchView();
             getParentFragmentManager().setFragmentResultListener(AddJobPostingFragment.REDIRECT_TO_APPLICANTS, getViewLifecycleOwner(), (requestKey, result) -> {
                 int jobPostingId = result.getInt(AddJobPostingFragment.JOB_POSTING_REDIRECT_BUNDLE_KEY, -1);
                 if (jobPostingId != -1) {
@@ -68,4 +72,42 @@ public class EmployerHomeFragment extends Fragment {
             });
         });
     }
+
+    private void setupSearchView() {
+        this.viewModel.searchUiStateMutableLiveData.observe(getViewLifecycleOwner(), searchQueryAndListUIState -> {
+            if (searchQueryAndListUIState instanceof UIState.Success) {
+                EmployeeHomeViewModel.SearchQueryAndList data = ((UIState.Success<EmployeeHomeViewModel.SearchQueryAndList>) searchQueryAndListUIState).data;
+                if (data.searchQuery != null && !data.searchQuery.isEmpty() && !data.searchQuery.isBlank()) {
+                    List<JobPosting> matchingJobPosting = new ArrayList<>();
+                    data.jobPostingList.forEach(jobPosting -> {
+                        if (jobPosting.postingName.toLowerCase().contains(data.searchQuery.toLowerCase())) {
+                            matchingJobPosting.add(jobPosting);
+                        }
+                    });
+                    adapter.refreshList(matchingJobPosting);
+                } else if (data.searchQuery == null || data.searchQuery.isBlank() || data.searchQuery.isEmpty()) {
+                    adapter.refreshList(data.jobPostingList);
+                }
+            }
+        });
+        this.binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                UIState<EmployeeHomeViewModel.SearchQueryAndList> data = viewModel.searchUiStateMutableLiveData.getValue();
+                if (data instanceof UIState.Success) {
+                    EmployeeHomeViewModel.SearchQueryAndList queryAndList = ((UIState.Success<EmployeeHomeViewModel.SearchQueryAndList>) data).data;
+                    EmployeeHomeViewModel.SearchQueryAndList searchQueryAndList = new EmployeeHomeViewModel.SearchQueryAndList(queryAndList.jobPostingList, s);
+                    UIState.Success<EmployeeHomeViewModel.SearchQueryAndList> uiState = new UIState.Success<>(searchQueryAndList);
+                    viewModel.searchUiStateMutableLiveData.setValue(uiState);
+                }
+                return true;
+            }
+        });
+    }
+
 }

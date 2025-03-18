@@ -14,6 +14,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,12 +23,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
+import com.denprog.codefestapp.destinations.employee.dialog.filter.FilterDialogFragment;
 import com.denprog.codefestapp.destinations.employer.JobPostingRecyclerViewAdapter;
 import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 
 public class EmployeeHomeFragment extends Fragment {
@@ -35,6 +40,10 @@ public class EmployeeHomeFragment extends Fragment {
     JobPostingRecyclerViewAdapter adapter;
     EmployeeHomeViewModel viewModel;
     EmployeeActivityViewModel mainViewModel;
+    FilterDialogFragment dialogFragment;
+    public static final String MAX_SALARY_ARG_KEY = "arg_max_salary";
+    public static final String MIN_SALARY_ARG_KEY = "arg_min_salary";
+    public static final String CATEGORY_ARG_KEY = "arg_category_key";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,8 +54,6 @@ public class EmployeeHomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentEmployerHomeBinding.inflate(getLayoutInflater(), container, false);
-
-
         return binding.getRoot();
     }
 
@@ -54,74 +61,114 @@ public class EmployeeHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.viewModel = new ViewModelProvider(requireActivity()).get(EmployeeHomeViewModel.class);
         this.mainViewModel = new ViewModelProvider(requireActivity()).get(EmployeeActivityViewModel.class);
-
+        dialogFragment = new FilterDialogFragment();
         NavController navController = NavHostFragment.findNavController(requireParentFragment());
-        this.viewModel.employeStateMutableLiveData.observe(getViewLifecycleOwner(), employeeIdUIState -> {
-            if (employeeIdUIState instanceof UIState.Success) {
-                EmployeeActivityViewModel.EmployeeId employeeIdCredentials = ((UIState.Success<EmployeeActivityViewModel.EmployeeId>) employeeIdUIState).data;
-                setupRcvAdapter(navController, employeeIdCredentials);
-                setupSearchView();
-
-            } else if (employeeIdUIState instanceof UIState.Fail) {
-                Toast.makeText(requireContext(), ((UIState.Fail<EmployeeActivityViewModel.EmployeeId>) employeeIdUIState).message, Toast.LENGTH_SHORT).show();
-            }
-        });
         Intent intent = requireActivity().getIntent();
         Bundle bundle = intent.getExtras();
         if (bundle != null) {
             int employeeId = bundle.getInt(EMPLOYEE_ID_BUNDLE_KEY, -1);
             int userId = bundle.getInt(USER_ID_BUNDLE_KEY, -1);
             if (employeeId != -1 && userId != -1) {
-                this.viewModel.employeStateMutableLiveData.setValue(new UIState.Success<>(new EmployeeActivityViewModel.EmployeeId(employeeId, userId)));
+                viewModel.listMutableLiveData.observe(getViewLifecycleOwner(), jobPostingList -> {
+                    adapter.refreshList(jobPostingList);
+                });
+                viewModel.getAllJobPosting();
+                setupRcvAdapter(navController, employeeId);
+                setupSearchView();
+                setupFilter();
             }
         }
     }
 
-    private void setupRcvAdapter (NavController navController, EmployeeActivityViewModel.EmployeeId employeeCredentials) {
+    private void setupRcvAdapter (NavController navController, int employeeId) {
         adapter = new JobPostingRecyclerViewAdapter(jobPostingId -> {
-            navController.navigate(EmployeeHomeFragmentDirections.actionEmployeeHomeFragmentToJobPostingApplicationDialogFragment(employeeCredentials.employeeId, jobPostingId));
+            navController.navigate(EmployeeHomeFragmentDirections.actionEmployeeHomeFragmentToJobPostingApplicationDialogFragment(employeeId, jobPostingId));
         });
-        viewModel.getAllJobPosting();
-        viewModel.listMutableLiveData.observe(getViewLifecycleOwner(),
-                jobPostingList -> adapter.refreshList(jobPostingList));
         binding.list.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.list.setAdapter(adapter);
     }
 
+    private void setupFilter () {
+        binding.applyAdditionalFilter.setOnClickListener(view1 -> {
+            if (!dialogFragment.isVisible() && !dialogFragment.isAdded()) {
+                dialogFragment.setArguments(getFilterArgs(viewModel.searchStateMutableLiveData.getValue()));
+                dialogFragment.show(getParentFragmentManager(), "FilterDialog");
+                getParentFragmentManager().setFragmentResultListener(
+                        FilterDialogFragment.RESULT_KEY,
+                        getViewLifecycleOwner(),
+                        (requestKey, result) -> {
+                            viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(parseFilterFragmentResult(result)));
+                        });
+            }
+        });
+    }
+
     private void setupSearchView() {
-        this.viewModel.searchUiStateMutableLiveData.observe(getViewLifecycleOwner(), searchQueryAndListUIState -> {
-            if (searchQueryAndListUIState instanceof UIState.Success) {
-                EmployeeHomeViewModel.SearchQueryAndList data = ((UIState.Success<EmployeeHomeViewModel.SearchQueryAndList>) searchQueryAndListUIState).data;
-                if (data.searchQuery != null && !data.searchQuery.isEmpty() && !data.searchQuery.isBlank()) {
-                    List<JobPosting> matchingJobPosting = new ArrayList<>();
-                    data.jobPostingList.forEach(jobPosting -> {
-                        if (jobPosting.postingName.toLowerCase().contains(data.searchQuery.toLowerCase())) {
-                            matchingJobPosting.add(jobPosting);
-                        }
-                    });
-                    adapter.refreshList(matchingJobPosting);
-                } else if (data.searchQuery == null || data.searchQuery.isBlank() || data.searchQuery.isEmpty()) {
-                    adapter.refreshList(data.jobPostingList);
-                }
+        this.viewModel.searchStateMutableLiveData.observe(getViewLifecycleOwner(), searchState -> {
+            if (searchState instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
+                EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList = ((EmployeeHomeViewModel.SearchState.OnSearch) searchState).searchQueryFilterAndList;
+                viewModel.filterForCategory(searchQueryFilterAndList.minSalary, searchQueryFilterAndList.maxSalary, searchQueryFilterAndList.category, searchQueryFilterAndList.searchQuery);
             }
         });
         this.binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                return false;
-            }
+                EmployeeHomeViewModel.SearchState searchState = viewModel.searchStateMutableLiveData.getValue();
+                EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList;
 
-            @Override
-            public boolean onQueryTextChange(String s) {
-                UIState<EmployeeHomeViewModel.SearchQueryAndList> data = viewModel.searchUiStateMutableLiveData.getValue();
-                if (data instanceof UIState.Success) {
-                    EmployeeHomeViewModel.SearchQueryAndList queryAndList = ((UIState.Success<EmployeeHomeViewModel.SearchQueryAndList>) data).data;
-                    EmployeeHomeViewModel.SearchQueryAndList searchQueryAndList = new EmployeeHomeViewModel.SearchQueryAndList(queryAndList.jobPostingList, s);
-                    UIState.Success<EmployeeHomeViewModel.SearchQueryAndList> uiState = new UIState.Success<>(searchQueryAndList);
-                    viewModel.searchUiStateMutableLiveData.setValue(uiState);
+                if (searchState instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
+                    searchQueryFilterAndList = ((EmployeeHomeViewModel.SearchState.OnSearch) searchState).searchQueryFilterAndList;
+                    searchQueryFilterAndList.searchQuery = s;
+                } else {
+                    searchQueryFilterAndList = new EmployeeHomeViewModel.SearchQueryFilterAndList();
                 }
+
+                if (s.isBlank() || s.isEmpty()) {
+                    searchQueryFilterAndList.searchQuery = null;
+                } else {
+                    searchQueryFilterAndList.searchQuery = s;
+                }
+                viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(searchQueryFilterAndList));
                 return true;
             }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
         });
+    }
+
+    private EmployeeHomeViewModel.SearchQueryFilterAndList parseFilterFragmentResult(Bundle result) {
+        int minValue = result.getInt(FilterDialogFragment.MIN_SALARY_BUNDLE_KEY, -1);
+        int maxValue = result.getInt(FilterDialogFragment.MAX_SALARY_BUNDLE_KEY, - 1);
+        String category = result.getString(FilterDialogFragment.CATEGORY_BUNDLE_KEY, null);
+        EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList;
+        if (viewModel.searchStateMutableLiveData.getValue() instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
+            EmployeeHomeViewModel.SearchQueryFilterAndList searchQuery = ((EmployeeHomeViewModel.SearchState.OnSearch) viewModel.searchStateMutableLiveData.getValue()).searchQueryFilterAndList;
+            searchQuery.maxSalary = maxValue;
+            searchQuery.minSalary = minValue;
+            searchQuery.category = category;
+            searchQueryFilterAndList = searchQuery;
+        } else {
+            searchQueryFilterAndList = new EmployeeHomeViewModel.SearchQueryFilterAndList();
+            searchQueryFilterAndList.searchQuery = null;
+            searchQueryFilterAndList.category = category;
+            searchQueryFilterAndList.maxSalary = maxValue;
+            searchQueryFilterAndList.minSalary = minValue;
+        }
+        return searchQueryFilterAndList;
+    }
+
+    private Bundle getFilterArgs(EmployeeHomeViewModel.SearchState searchQueryFilterAndList) {
+        if (searchQueryFilterAndList instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
+            EmployeeHomeViewModel.SearchQueryFilterAndList query = ((EmployeeHomeViewModel.SearchState.OnSearch) searchQueryFilterAndList).searchQueryFilterAndList;
+            Bundle bundle = new Bundle();
+            bundle.putInt(MIN_SALARY_ARG_KEY, query.minSalary);
+            bundle.putInt(MAX_SALARY_ARG_KEY, query.maxSalary);
+            bundle.putString(CATEGORY_ARG_KEY, query.category);
+            return bundle;
+        } else {
+            return null;
+        }
     }
 }

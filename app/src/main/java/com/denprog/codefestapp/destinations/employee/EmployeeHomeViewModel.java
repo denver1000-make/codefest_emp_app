@@ -8,6 +8,7 @@ import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.JobPosting;
+import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
 import java.util.Collections;
@@ -24,8 +25,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 @HiltViewModel
 public class EmployeeHomeViewModel extends ViewModel {
     MutableLiveData<List<JobPosting>> listMutableLiveData = new MediatorLiveData<>(Collections.emptyList());
-    MutableLiveData<UIState<SearchQueryAndList>> searchUiStateMutableLiveData = new MediatorLiveData<>(null);
-    public MutableLiveData<UIState<EmployeeActivityViewModel.EmployeeId>> employeStateMutableLiveData = new MediatorLiveData<>(null);    AppDao appDao;
+    MutableLiveData<SearchState> searchStateMutableLiveData = new MediatorLiveData<>(null);
+    AppDao appDao;
     @Inject
     public EmployeeHomeViewModel(AppDatabase appDatabase) {
         this.appDao = appDatabase.getAppDao();
@@ -37,23 +38,12 @@ public class EmployeeHomeViewModel extends ViewModel {
             public List<JobPosting> get() {
                 return appDao.getAllJobPosting();
             }
-        }).thenAcceptAsync(new Consumer<>() {
+        }).thenAcceptAsync(new Consumer<List<JobPosting>>() {
             @Override
             public void accept(List<JobPosting> jobPostingList) {
-                searchUiStateMutableLiveData.postValue(new UIState.Success<>(new SearchQueryAndList(jobPostingList, null)));
+                listMutableLiveData.postValue(jobPostingList);
             }
         });
-    }
-
-
-    public static final class EmployeeCredentials {
-        public int employeeId;
-        public int userId;
-
-        public EmployeeCredentials(int employeeId, int userId) {
-            this.employeeId = employeeId;
-            this.userId = userId;
-        }
     }
 
     public static final class SearchQueryAndList {
@@ -64,6 +54,37 @@ public class EmployeeHomeViewModel extends ViewModel {
         public SearchQueryAndList(List<JobPosting> jobPostingList, String searchQuery) {
             this.jobPostingList = jobPostingList;
             this.searchQuery = searchQuery;
+        }
+    }
+
+    public static class SearchState {
+
+        public static final class OnSearch extends SearchState {
+            SearchQueryFilterAndList searchQueryFilterAndList;
+            public OnSearch(SearchQueryFilterAndList searchQueryFilterAndList) {
+                this.searchQueryFilterAndList = searchQueryFilterAndList;
+            }
+        }
+    }
+
+    public void filterForCategory (int minSalary, int maxSalary, String category, String searchQ) {
+        CompletableFuture.supplyAsync(new Supplier<List<JobPosting>>() {
+            @Override
+            public List<JobPosting> get() {
+                return appDao.filterByAllPosting(minSalary, maxSalary, category, searchQ);
+            }
+        }).thenAcceptAsync(jobPostingList -> {
+            listMutableLiveData.postValue(jobPostingList);
+        });
+    }
+
+    public static final class SearchQueryFilterAndList {
+        @Nullable
+        public String searchQuery = null;
+        public int maxSalary = -1;
+        public int minSalary = -1;
+        public String category = null;
+        public SearchQueryFilterAndList() {
         }
     }
 
