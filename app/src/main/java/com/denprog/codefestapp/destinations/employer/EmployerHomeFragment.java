@@ -142,8 +142,8 @@ public class EmployerHomeFragment extends Fragment {
     }
 
     private EmployeeHomeViewModel.SearchQueryFilterAndList parseFilterFragmentResult(Bundle result) {
-        int minValue = result.getInt(FilterDialogFragment.MIN_SALARY_BUNDLE_KEY, -1);
-        int maxValue = result.getInt(FilterDialogFragment.MAX_SALARY_BUNDLE_KEY, - 1);
+        int minValue = result.getInt(FilterDialogFragment.MIN_SALARY_BUNDLE_KEY, 0);
+        int maxValue = result.getInt(FilterDialogFragment.MAX_SALARY_BUNDLE_KEY, 0);
         String category = result.getString(FilterDialogFragment.CATEGORY_BUNDLE_KEY, null);
         EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList;
         if (viewModel.searchStateMutableLiveData.getValue() instanceof EmployeeHomeViewModel.SearchState.OnSearch) {

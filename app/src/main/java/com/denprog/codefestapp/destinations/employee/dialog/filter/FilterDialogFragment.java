@@ -25,6 +25,10 @@ import com.denprog.codefestapp.databinding.FragmentFilterDialogBinding;
 import com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment;
 import com.google.android.material.slider.Slider;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class FilterDialogFragment extends DialogFragment {
     FragmentFilterDialogBinding binding;
     public static final String CATEGORY_BUNDLE_KEY = "categ_filter";
@@ -58,7 +62,9 @@ public class FilterDialogFragment extends DialogFragment {
         }
 
         String[] categories = getResources().getStringArray(R.array.job_categories);
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, categories);
+        List<String> categoriesPlusAll = new ArrayList<>(Arrays.asList(categories));
+        categoriesPlusAll.add(0, "All");
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, categoriesPlusAll);
         binding.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -78,37 +84,32 @@ public class FilterDialogFragment extends DialogFragment {
             int minPrice = (int) this.binding.minPrice.getValue();
             int maxPrice = (int) this.binding.maxPrice.getValue();
             resultBundle.putInt(MIN_SALARY_BUNDLE_KEY, minPrice);
-            resultBundle.putInt(MAX_SALARY_BUNDLE_KEY, maxPrice == 0 ? -1 : maxPrice);
-            resultBundle.putString(CATEGORY_BUNDLE_KEY, binding.spinner.getSelectedItem().toString());
+            resultBundle.putInt(MAX_SALARY_BUNDLE_KEY, maxPrice);
+            String selectedCateg = binding.spinner.getSelectedItem().toString();
+            resultBundle.putString(CATEGORY_BUNDLE_KEY, selectedCateg.equals("All") ? null : selectedCateg);
             getParentFragmentManager().setFragmentResult(RESULT_KEY, resultBundle);
             dismissNow();
         });
 
-        binding.minPrice.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                binding.minValueDisplay.setText("Min Salary" + value);
-                float maxValue = binding.maxPrice.getValue();
-                if (value + 5000 >= maxValue) {
-                    Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
-                    if (maxValue != 0) {
-                        slider.setValue(maxValue - 5000);
-                    } else {
-                        slider.setValue(0);
-                    }
+        binding.minPrice.addOnChangeListener((slider, value, fromUser) -> {
+            binding.minValueDisplay.setText("Min Salary" + value);
+            float maxValue = binding.maxPrice.getValue();
+            if (value + 5000 >= maxValue) {
+                Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
+                if (maxValue != 0) {
+                    slider.setValue(maxValue - 5000);
+                } else {
+                    slider.setValue(0);
                 }
-
             }
+
         });
 
-        binding.maxPrice.addOnChangeListener(new Slider.OnChangeListener() {
-            @Override
-            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
-                binding.maxValueDisplay.setText("Max Salary " + value);
-                if (value - 5000 <= binding.minPrice.getValue()) {
-                    slider.setValue(binding.minPrice.getValue() + 5000);
-                    Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
-                }
+        binding.maxPrice.addOnChangeListener((slider, value, fromUser) -> {
+            binding.maxValueDisplay.setText("Max Salary " + value);
+            if (value - 5000 <= binding.minPrice.getValue()) {
+                slider.setValue(binding.minPrice.getValue() + 5000);
+                Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
             }
         });
 
