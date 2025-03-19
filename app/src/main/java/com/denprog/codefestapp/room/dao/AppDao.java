@@ -105,5 +105,10 @@ public interface AppDao {
             "maxSalary <= CASE WHEN :maxSalary = -1 THEN maxSalary ELSE :maxSalary END AND " +
             "postingCategory = CASE WHEN :category IS NULL THEN postingCategory ELSE :category END AND " +
             "postingName LIKE CASE WHEN :searchQ IS NULL THEN '%' || postingName|| '%' ELSE '%' || :searchQ || '%' END")
-    List<JobPosting> filterByAllPosting(int minSalary, int maxSalary, String category, String searchQ);
+    List<JobPosting> maxFilter(int minSalary, int maxSalary, String category, String searchQ);
+    @Query("SELECT * FROM JobPosting " +
+            "WHERE " +
+            "postingCategory = CASE WHEN :category IS NULL THEN postingCategory ELSE :category END AND " +
+            "postingName LIKE CASE WHEN :searchQ IS NULL THEN '%' || postingName|| '%' ELSE '%' || :searchQ || '%' END")
+    List<JobPosting> categoryAndSearchQFilter(String category, String searchQ);
 }

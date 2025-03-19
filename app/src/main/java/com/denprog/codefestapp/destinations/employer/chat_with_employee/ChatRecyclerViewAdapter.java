@@ -45,8 +45,6 @@ public class ChatRecyclerViewAdapter extends RecyclerView.Adapter<ChatRecyclerVi
         } else {
             holder.binding.parentLayout.setGravity(Gravity.START);
         }
-
-
     }
 
     @Override

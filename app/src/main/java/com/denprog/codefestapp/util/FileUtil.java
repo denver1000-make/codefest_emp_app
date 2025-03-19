@@ -89,7 +89,13 @@ public class FileUtil {
         File actualFile = new File(context.getFilesDir(), internalStorageFilePath);
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Files.FileColumns.DISPLAY_NAME, stripFilePath(internalStorageFilePath));
-        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, MimeTypeMap.getSingleton().getMimeTypeFromExtension(getExtension(internalStorageFilePath)));
+        contentValues.put(MediaStore.Files.FileColumns.MIME_TYPE, MimeTypeMap
+                .getSingleton()
+                .getMimeTypeFromExtension(
+                        getExtension(
+                                internalStorageFilePath
+                        )));
+
         contentValues.put(MediaStore.Files.FileColumns.RELATIVE_PATH,
                 Environment.DIRECTORY_DOWNLOADS +
                         File.separator +

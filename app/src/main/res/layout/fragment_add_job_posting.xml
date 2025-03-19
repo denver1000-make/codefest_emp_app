@@ -87,7 +87,7 @@
                             android:fontFamily="@font/montserrat"
                             android:hint="Salary"
                             android:inputType="numberDecimal"
-                            app:floatValue="@={viewModel.postingMinSalary}" />
+                            android:text="@={viewModel.postingMinSalary}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -103,7 +103,7 @@
                             android:fontFamily="@font/montserrat"
                             android:hint="Salary"
                             android:inputType="numberDecimal"
-                            floatValue="@={viewModel.postingMaxSalary}" />
+                            android:text="@={viewModel.postingMaxSalary}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                 </LinearLayout>

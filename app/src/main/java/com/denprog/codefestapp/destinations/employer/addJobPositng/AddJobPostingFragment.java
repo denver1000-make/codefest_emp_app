@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentAddJobPostingBinding;
 import com.denprog.codefestapp.destinations.employer.EmployerHomeFragment;
 import com.denprog.codefestapp.destinations.employer.EmployerHomeViewModel;
@@ -20,18 +21,15 @@ import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
 
 public class AddJobPostingFragment extends DialogFragment {
-    public static final String[] listOfCategories = new String[]{"Finance", "IT", "Art"};
     public static final String resultKey = "ID_OF_JOB_POSTING";
     public static final String RESULT_KEY_OF_UPDATE = "UPDATE_RESULT";
     public static final String bundleOfIntegerId = "ID_OF_ADDED_JOB_POSTING";
     public static final String bundleOfUpdatedInteger = "ID_OF_UPDATED_INTEGER_ID";
     public static final String REDIRECT_TO_APPLICANTS = "REDIRECT_TO_APPLICANTS";
     public static final String JOB_POSTING_REDIRECT_BUNDLE_KEY = "JOB_POSTING_ID_KEY_FOR_REDIRECT";
-
     private AddJobPostingViewModel mViewModel;
     private EmployerHomeViewModel employerHomeViewModel;
     private FragmentAddJobPostingBinding binding;
-
     public static AddJobPostingFragment newInstance() {
         return new AddJobPostingFragment();
     }
@@ -57,8 +55,8 @@ public class AddJobPostingFragment extends DialogFragment {
                         JobPosting jobPosting = ((UIState.Success<JobPosting>) jobPostingUIState).data;
                         mViewModel.postingDescription.set(jobPosting.postingDescription);
                         mViewModel.postingName.set(jobPosting.postingName);
-                        mViewModel.postingMinSalary.set(jobPosting.minSalary);
-                        mViewModel.postingMaxSalary.set(jobPosting.maxSalary);
+                        mViewModel.postingMinSalary.set(jobPosting.minSalary + "");
+                        mViewModel.postingMaxSalary.set(jobPosting.maxSalary + "");
                         mViewModel.postingCategory.set(jobPosting.postingCategory);
                     }
                 });
@@ -67,7 +65,7 @@ public class AddJobPostingFragment extends DialogFragment {
                     public void onSuccess(Integer data) {
                         Bundle updateResultBundle = new Bundle();
                         updateResultBundle.putInt(bundleOfUpdatedInteger, data);
-                        getParentFragmentManager().setFragmentResult(RESULT_KEY_OF_UPDATE, updateResultBundle);
+                        getChildFragmentManager().setFragmentResult(RESULT_KEY_OF_UPDATE, updateResultBundle);
                         dismiss();
                     }
 
@@ -93,8 +91,8 @@ public class AddJobPostingFragment extends DialogFragment {
             });
 
         }
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, AddJobPostingFragment.listOfCategories);
+        String[] categories = getResources().getStringArray(R.array.job_categories);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, categories);
         binding.categorySpinner.setAdapter(adapter);
 
         mViewModel.mutableLiveDataOfInsertedId.observe(requireActivity(), integerUIState -> {
@@ -141,8 +139,8 @@ public class AddJobPostingFragment extends DialogFragment {
         mViewModel.postingCategory.set("");
         mViewModel.postingName.set("");
         mViewModel.postingDescription.set("");
-        mViewModel.postingMaxSalary.set(0.0f);
-        mViewModel.postingMinSalary.set(0.0f);
+        mViewModel.postingMaxSalary.set("");
+        mViewModel.postingMinSalary.set("");
         mViewModel.mutableLiveDataOfInsertedId.setValue(null);
     }
 

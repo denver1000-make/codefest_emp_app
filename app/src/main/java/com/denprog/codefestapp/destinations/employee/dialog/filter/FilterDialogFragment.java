@@ -17,10 +17,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentFilterDialogBinding;
 import com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment;
+import com.google.android.material.slider.Slider;
 
 public class FilterDialogFragment extends DialogFragment {
     FragmentFilterDialogBinding binding;
@@ -46,8 +49,8 @@ public class FilterDialogFragment extends DialogFragment {
         if (argBundle != null) {
             int maxSalary = argBundle.getInt(EmployeeHomeFragment.MAX_SALARY_ARG_KEY);
             int minSalary = argBundle.getInt(EmployeeHomeFragment.MIN_SALARY_ARG_KEY);
-            binding.maxPrice.setProgress(maxSalary);
-            binding.minPrice.setProgress(minSalary);
+            binding.maxPrice.setValue(maxSalary);
+            binding.minPrice.setValue(minSalary);
             String category = argBundle.getString(EmployeeHomeFragment.CATEGORY_ARG_KEY);
             if (category != null) {
                 binding.setSelectedCategory(category);
@@ -72,14 +75,43 @@ public class FilterDialogFragment extends DialogFragment {
         alertDialog.setPositiveButton("Search", (dialogInterface, i) -> {
             Bundle resultBundle = new Bundle();
 
-            int minPrice = this.binding.minPrice.getProgress();
-            int maxPrice = this.binding.maxPrice.getProgress();
+            int minPrice = (int) this.binding.minPrice.getValue();
+            int maxPrice = (int) this.binding.maxPrice.getValue();
             resultBundle.putInt(MIN_SALARY_BUNDLE_KEY, minPrice);
             resultBundle.putInt(MAX_SALARY_BUNDLE_KEY, maxPrice == 0 ? -1 : maxPrice);
             resultBundle.putString(CATEGORY_BUNDLE_KEY, binding.spinner.getSelectedItem().toString());
             getParentFragmentManager().setFragmentResult(RESULT_KEY, resultBundle);
             dismissNow();
         });
+
+        binding.minPrice.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                binding.minValueDisplay.setText("Min Salary" + value);
+                float maxValue = binding.maxPrice.getValue();
+                if (value + 5000 >= maxValue) {
+                    Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
+                    if (maxValue != 0) {
+                        slider.setValue(maxValue - 5000);
+                    } else {
+                        slider.setValue(0);
+                    }
+                }
+
+            }
+        });
+
+        binding.maxPrice.addOnChangeListener(new Slider.OnChangeListener() {
+            @Override
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                binding.maxValueDisplay.setText("Max Salary " + value);
+                if (value - 5000 <= binding.minPrice.getValue()) {
+                    slider.setValue(binding.minPrice.getValue() + 5000);
+                    Toast.makeText(requireContext(), "Illegal Value", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
         alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

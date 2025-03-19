@@ -28,9 +28,7 @@ public class JobPostingRecyclerViewAdapter extends RecyclerView.Adapter<JobPosti
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
         return new ViewHolder(FragmentJobPostingItemBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
-
     }
 
     public void refreshList(List<JobPosting> jobPostingList) {
@@ -43,7 +41,9 @@ public class JobPostingRecyclerViewAdapter extends RecyclerView.Adapter<JobPosti
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.binding.jobPostingName.setText(holder.mItem.postingName);
-        holder.binding.jobPostingDescription.setText(holder.mItem.postingDescription);
+        holder.binding.jobPostingDesc.setText(holder.mItem.postingDescription);
+        holder.binding.minSalary.setText(holder.mItem.minSalary + "Pesos");
+        holder.binding.maxSalary.setText(holder.mItem.maxSalary + "Pesos");
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,14 +58,12 @@ public class JobPostingRecyclerViewAdapter extends RecyclerView.Adapter<JobPosti
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final TextView mIdView;
         public JobPosting mItem;
 
         FragmentJobPostingItemBinding binding;
         public ViewHolder(FragmentJobPostingItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-            mIdView = binding.itemNumber;
         }
 
         @Override

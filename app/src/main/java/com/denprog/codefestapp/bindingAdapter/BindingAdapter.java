@@ -15,8 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class BindingAdapter {
-
-
     @androidx.databinding.BindingAdapter("floatValue")
     public static void setFloat(TextInputEditText editText, Float value) {
         if (value != null && !editText.toString().equals(String.valueOf(value))) {

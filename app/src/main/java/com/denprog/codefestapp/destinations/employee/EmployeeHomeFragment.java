@@ -9,13 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -25,21 +22,12 @@ import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employee.dialog.filter.FilterDialogFragment;
 import com.denprog.codefestapp.destinations.employer.JobPostingRecyclerViewAdapter;
-import com.denprog.codefestapp.room.entity.JobPosting;
-import com.denprog.codefestapp.util.OnOperationSuccessful;
-import com.denprog.codefestapp.util.UIState;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
 
 
 public class EmployeeHomeFragment extends Fragment {
-
     FragmentEmployerHomeBinding binding;
     JobPostingRecyclerViewAdapter adapter;
     EmployeeHomeViewModel viewModel;
-    EmployeeActivityViewModel mainViewModel;
     FilterDialogFragment dialogFragment;
     public static final String MAX_SALARY_ARG_KEY = "arg_max_salary";
     public static final String MIN_SALARY_ARG_KEY = "arg_min_salary";
@@ -60,7 +48,6 @@ public class EmployeeHomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         this.viewModel = new ViewModelProvider(requireActivity()).get(EmployeeHomeViewModel.class);
-        this.mainViewModel = new ViewModelProvider(requireActivity()).get(EmployeeActivityViewModel.class);
         dialogFragment = new FilterDialogFragment();
         NavController navController = NavHostFragment.findNavController(requireParentFragment());
         Intent intent = requireActivity().getIntent();
@@ -97,7 +84,8 @@ public class EmployeeHomeFragment extends Fragment {
                         FilterDialogFragment.RESULT_KEY,
                         getViewLifecycleOwner(),
                         (requestKey, result) -> {
-                            viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(parseFilterFragmentResult(result)));
+                            EmployeeHomeViewModel.SearchQueryFilterAndList searchQ = parseFilterFragmentResult(result);
+                            viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(searchQ));
                         });
             }
         });
@@ -107,7 +95,10 @@ public class EmployeeHomeFragment extends Fragment {
         this.viewModel.searchStateMutableLiveData.observe(getViewLifecycleOwner(), searchState -> {
             if (searchState instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
                 EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList = ((EmployeeHomeViewModel.SearchState.OnSearch) searchState).searchQueryFilterAndList;
-                viewModel.filterForCategory(searchQueryFilterAndList.minSalary, searchQueryFilterAndList.maxSalary, searchQueryFilterAndList.category, searchQueryFilterAndList.searchQuery);
+                if (searchQueryFilterAndList.minSalary == 0 && searchQueryFilterAndList.maxSalary == 0) {
+                    viewModel.filterByCategoryAndSearchQ(searchQueryFilterAndList.category, searchQueryFilterAndList.searchQuery);
+                }
+                viewModel.filterByAll(searchQueryFilterAndList.minSalary, searchQueryFilterAndList.maxSalary, searchQueryFilterAndList.category, searchQueryFilterAndList.searchQuery);
             }
         });
         this.binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -128,12 +119,30 @@ public class EmployeeHomeFragment extends Fragment {
                 } else {
                     searchQueryFilterAndList.searchQuery = s;
                 }
+
                 viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(searchQueryFilterAndList));
                 return true;
             }
             @Override
             public boolean onQueryTextChange(String s) {
-                return false;
+                EmployeeHomeViewModel.SearchState searchState = viewModel.searchStateMutableLiveData.getValue();
+                EmployeeHomeViewModel.SearchQueryFilterAndList searchQueryFilterAndList;
+
+                if (searchState instanceof EmployeeHomeViewModel.SearchState.OnSearch) {
+                    searchQueryFilterAndList = ((EmployeeHomeViewModel.SearchState.OnSearch) searchState).searchQueryFilterAndList;
+                    searchQueryFilterAndList.searchQuery = s;
+                } else {
+                    searchQueryFilterAndList = new EmployeeHomeViewModel.SearchQueryFilterAndList();
+                }
+
+                if (s.isBlank() || s.isEmpty()) {
+                    searchQueryFilterAndList.searchQuery = null;
+                } else {
+                    searchQueryFilterAndList.searchQuery = s;
+                }
+
+                viewModel.searchStateMutableLiveData.setValue(new EmployeeHomeViewModel.SearchState.OnSearch(searchQueryFilterAndList));
+                return true;
             }
         });
     }

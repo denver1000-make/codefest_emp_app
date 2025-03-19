@@ -12,6 +12,7 @@ import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.JobPosting;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 import com.denprog.codefestapp.util.UIState;
+import com.denprog.codefestapp.util.Validator;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -29,9 +30,8 @@ public class AddJobPostingViewModel extends ViewModel {
     public ObservableField<String> postingName = new ObservableField<>("");
     public ObservableField<String> postingDescription = new ObservableField<>("");
     public ObservableField<String> postingCategory = new ObservableField<>("");
-    public ObservableField<Float> postingMaxSalary = new ObservableField<>(0.0f);
-    public ObservableField<Float> postingMinSalary = new ObservableField<>(0.0f);
-
+    public ObservableField<String> postingMaxSalary = new ObservableField<>("0");
+    public ObservableField<String> postingMinSalary = new ObservableField<>("0");
     public MutableLiveData<UIState<JobPosting>> jobPosting = new MutableLiveData<>(null);
     public Handler handler = new Handler(Looper.getMainLooper());
     private AppDao appDao;
@@ -44,8 +44,17 @@ public class AddJobPostingViewModel extends ViewModel {
         String postingNameValue = postingName.get();
         String postingDescriptionValue = postingDescription.get();
         String postingCategoryValue = postingCategory.get();
-        float postingMaxSalaryValue = postingMaxSalary.get();
-        float postingMinSalaryValue = postingMinSalary.get();
+        String postingMaxSalaryValueStr = postingMaxSalary.get();
+        String postingMinSalaryValueStr = postingMinSalary.get();
+
+        if (Validator.areInputNull(postingMaxSalaryValueStr, postingMinSalaryValueStr)) {
+            mutableLiveDataOfInsertedId.setValue(new UIState.Fail<>("Empty Fields"));
+            return;
+        }
+
+        float postingMinSalaryValue = Float.parseFloat(postingMinSalaryValueStr);
+        float postingMaxSalaryValue = Float.parseFloat(postingMaxSalaryValueStr);
+
         CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() -> Math.toIntExact(appDao.insertJobPosting(new JobPosting(postingNameValue, postingDescriptionValue, postingCategoryValue, postingMinSalaryValue, postingMaxSalaryValue, employerId))));
         completableFuture.thenAcceptAsync(integer -> mutableLiveDataOfInsertedId.postValue(new UIState.Success<>(integer)));
         completableFuture.exceptionally(throwable -> {
@@ -67,18 +76,30 @@ public class AddJobPostingViewModel extends ViewModel {
     }
 
     public void updateJobPosting (OnOperationSuccessful<Integer> onOperationSuccessful) {
-        CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(() -> {
-            if (jobPosting.getValue() instanceof UIState.Success) {
-                JobPosting jobPostingObj = ((UIState.Success<JobPosting>) jobPosting.getValue()).data;
-                jobPostingObj.postingName = postingName.get();
-                jobPostingObj.postingDescription = postingDescription.get();
-                jobPostingObj.postingCategory = postingCategory.get();
-                jobPostingObj.minSalary = postingMinSalary.get();
-                jobPostingObj.maxSalary = postingMaxSalary.get();
-                appDao.updateJobPosting(jobPostingObj);
-                return jobPostingObj.postingId;
-            } else {
-                return -1;
+        CompletableFuture<Integer> completableFuture = CompletableFuture.supplyAsync(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                if (jobPosting.getValue() instanceof UIState.Success) {
+                    JobPosting jobPostingObj = ((UIState.Success<JobPosting>) jobPosting.getValue()).data;
+                    jobPostingObj.postingName = postingName.get();
+                    jobPostingObj.postingDescription = postingDescription.get();
+                    jobPostingObj.postingCategory = postingCategory.get();
+
+                    String postingMaxSalaryValueStr = postingMaxSalary.get();
+                    String postingMinSalaryValueStr = postingMinSalary.get();
+
+                    if (Validator.areInputNull(postingMaxSalaryValueStr, postingMinSalaryValueStr)) {
+                        throw new RuntimeException("Empty Input Fields");
+                    }
+
+                    jobPostingObj.minSalary = Float.parseFloat(postingMinSalaryValueStr);
+                    jobPostingObj.maxSalary = Float.parseFloat(postingMaxSalaryValueStr);
+
+                    appDao.updateJobPosting(jobPostingObj);
+                    return jobPostingObj.postingId;
+                } else {
+                    return -1;
+                }
             }
         });
         completableFuture.thenAccept(integer -> {
