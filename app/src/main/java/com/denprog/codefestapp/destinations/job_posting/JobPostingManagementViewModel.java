@@ -1,7 +1,5 @@
 package com.denprog.codefestapp.destinations.job_posting;
 
-import android.view.View;
-
 import androidx.lifecycle.MediatorLiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;

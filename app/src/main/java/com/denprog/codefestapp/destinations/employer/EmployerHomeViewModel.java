@@ -8,9 +8,7 @@ import com.denprog.codefestapp.destinations.employee.EmployeeHomeViewModel;
 import com.denprog.codefestapp.room.AppDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.JobPosting;
-import com.denprog.codefestapp.util.UIState;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;

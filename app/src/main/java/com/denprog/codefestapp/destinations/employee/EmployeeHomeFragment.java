@@ -18,7 +18,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.denprog.codefestapp.EmployeeActivityViewModel;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employee.dialog.filter.FilterDialogFragment;
 import com.denprog.codefestapp.destinations.employer.JobPostingRecyclerViewAdapter;

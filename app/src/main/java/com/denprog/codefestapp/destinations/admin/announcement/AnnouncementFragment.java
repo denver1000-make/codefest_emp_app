@@ -2,30 +2,22 @@ package com.denprog.codefestapp.destinations.admin.announcement;
 
 import static com.denprog.codefestapp.HomeActivityViewModel.ADMIN_ID_BUNDLE_KEY;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.fragment.NavHostFragment;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
+
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentAnnouncementListBinding;
 import com.denprog.codefestapp.destinations.admin.announcement.dialog.AddAnnouncementDialogFragment;
-import com.denprog.codefestapp.destinations.admin.announcement.placeholder.PlaceholderContent;
 public class AnnouncementFragment extends Fragment {
     FragmentAnnouncementListBinding binding;
     AnnouncementFragmentViewModel viewModel;

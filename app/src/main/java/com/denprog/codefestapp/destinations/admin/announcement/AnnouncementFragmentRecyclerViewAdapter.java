@@ -1,15 +1,14 @@
 package com.denprog.codefestapp.destinations.admin.announcement;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.admin.announcement.placeholder.PlaceholderContent.PlaceholderItem;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denprog.codefestapp.databinding.FragmentAnnouncementBinding;
+import com.denprog.codefestapp.destinations.admin.announcement.placeholder.PlaceholderContent.PlaceholderItem;
 
 import java.util.List;
 

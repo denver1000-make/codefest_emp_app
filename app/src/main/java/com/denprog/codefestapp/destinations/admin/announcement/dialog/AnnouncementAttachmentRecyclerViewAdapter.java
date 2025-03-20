@@ -1,13 +1,11 @@
 package com.denprog.codefestapp.destinations.admin.announcement.dialog;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.admin.announcement.dialog.placeholder.PlaceholderContent.PlaceholderItem;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denprog.codefestapp.databinding.FragmentAddAnnouncementDialogBinding;
 import com.denprog.codefestapp.room.entity.AnnouncementAttachment;
 

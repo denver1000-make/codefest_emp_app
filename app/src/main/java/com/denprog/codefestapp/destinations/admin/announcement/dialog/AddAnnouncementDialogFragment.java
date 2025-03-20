@@ -1,13 +1,16 @@
 package com.denprog.codefestapp.destinations.admin.announcement.dialog;
 
-import static android.os.Build.VERSION_CODES.R;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -22,23 +25,10 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Toast;
-
-import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentAddAnnouncementDialogListBinding;
 import com.denprog.codefestapp.room.entity.AnnouncementAttachment;
 import com.denprog.codefestapp.util.OnOperationSuccessful;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 

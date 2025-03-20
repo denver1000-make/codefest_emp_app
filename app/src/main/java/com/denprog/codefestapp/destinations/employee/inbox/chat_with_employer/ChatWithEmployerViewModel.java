@@ -8,7 +8,6 @@ import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.PrivateChatItemText;
 import com.denprog.codefestapp.util.TimeUtil;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;

@@ -5,7 +5,6 @@ import static com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment
 import static com.denprog.codefestapp.destinations.employee.EmployeeHomeFragment.MIN_SALARY_ARG_KEY;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -25,11 +23,6 @@ import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employee.EmployeeHomeViewModel;
 import com.denprog.codefestapp.destinations.employee.dialog.filter.FilterDialogFragment;
 import com.denprog.codefestapp.destinations.employer.addJobPositng.AddJobPostingFragment;
-import com.denprog.codefestapp.room.entity.JobPosting;
-import com.denprog.codefestapp.util.UIState;
-
-import java.util.ArrayList;
-import java.util.List;
 public class EmployerHomeFragment extends Fragment {
     JobPostingRecyclerViewAdapter adapter;
     FragmentEmployerHomeBinding binding;

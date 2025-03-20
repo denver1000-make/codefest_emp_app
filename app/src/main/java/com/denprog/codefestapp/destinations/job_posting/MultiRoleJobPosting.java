@@ -9,13 +9,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -24,8 +22,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.denprog.codefestapp.R;
 import com.denprog.codefestapp.databinding.FragmentEmployerHomeBinding;
 import com.denprog.codefestapp.destinations.employee.EmployeeHomeFragmentDirections;
-import com.denprog.codefestapp.destinations.employee.EmployeeHomeViewModel;
-import com.denprog.codefestapp.destinations.employee.dialog.filter.FilterDialogFragment;
 import com.denprog.codefestapp.destinations.employer.JobPostingRecyclerViewAdapter;
 
 

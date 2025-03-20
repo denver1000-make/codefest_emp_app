@@ -1,13 +1,12 @@
 package com.denprog.codefestapp.destinations.employee.inbox;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.denprog.codefestapp.destinations.employee.inbox.placeholder.PlaceholderContent.PlaceholderItem;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.denprog.codefestapp.databinding.FragmentChatThreadBinding;
 import com.denprog.codefestapp.room.view.ChatThreadWithEmployeeName;
 
