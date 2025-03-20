@@ -63,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
             finish();
         }
         appBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.adminHomeFragment, R.id.adminProfile)
+                R.id.adminHomeFragment, R.id.adminProfile, R.id.adminAnnouncement)
                 .setOpenableLayout(drawerLayout)
                 .build();
         NavController navController = NavHostFragment.findNavController(binding.appBarMain.content.adminFragmentContainerView.getFragment());

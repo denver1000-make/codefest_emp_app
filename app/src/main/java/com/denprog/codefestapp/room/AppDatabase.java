@@ -7,6 +7,8 @@ import androidx.room.RoomDatabase;
 import com.denprog.codefestapp.room.dao.AppDao;
 import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
+import com.denprog.codefestapp.room.entity.Announcement;
+import com.denprog.codefestapp.room.entity.AnnouncementAttachment;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
@@ -22,7 +24,7 @@ import com.denprog.codefestapp.room.entity.User;
 import com.denprog.codefestapp.room.view.ChatThreadWithEmployeeName;
 import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
 
-@Database(version = 9, entities = {
+@Database(version = 10, entities = {
         User.class,
         Employer.class,
         Employee.class,
@@ -36,7 +38,9 @@ import com.denprog.codefestapp.room.view.JobPostingApplicationAndEmployeeInfo;
         JobPostingApplication.class,
         PrivateChatThread.class,
         PrivateChatItemText.class,
-        PrivateChatItem.class},
+        PrivateChatItem.class,
+        AnnouncementAttachment.class,
+        Announcement.class},
         views = {JobPostingApplicationAndEmployeeInfo.class, ChatThreadWithEmployeeName.class},
         exportSchema = true
 )

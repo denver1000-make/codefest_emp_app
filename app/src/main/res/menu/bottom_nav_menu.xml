@@ -10,4 +10,10 @@
         android:id="@+id/adminProfile"
         android:icon="@drawable/baseline_account_circle_24"
         android:title="Profile" />
+
+    <item
+        android:title="Announcement Management"
+        android:icon="@drawable/baseline_email_24"
+        android:id="@+id/adminAnnouncement"/>
+
 </menu>

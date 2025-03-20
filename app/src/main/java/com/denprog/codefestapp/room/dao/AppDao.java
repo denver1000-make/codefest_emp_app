@@ -9,6 +9,8 @@ import androidx.room.Update;
 
 import com.denprog.codefestapp.room.entity.AccountForReview;
 import com.denprog.codefestapp.room.entity.Admin;
+import com.denprog.codefestapp.room.entity.Announcement;
+import com.denprog.codefestapp.room.entity.AnnouncementAttachment;
 import com.denprog.codefestapp.room.entity.Credentials;
 import com.denprog.codefestapp.room.entity.Employee;
 import com.denprog.codefestapp.room.entity.Employer;
@@ -111,4 +113,10 @@ public interface AppDao {
             "postingCategory = CASE WHEN :category IS NULL THEN postingCategory ELSE :category END AND " +
             "postingName LIKE CASE WHEN :searchQ IS NULL THEN '%' || postingName|| '%' ELSE '%' || :searchQ || '%' END")
     List<JobPosting> categoryAndSearchQFilter(String category, String searchQ);
+
+    @Insert
+    long insertAnnouncement(Announcement announcement);
+
+    @Insert
+    void insertAnnouncementAttachments(AnnouncementAttachment announcementAttachment);
 }

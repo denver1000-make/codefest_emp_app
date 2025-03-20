@@ -43,4 +43,21 @@
         android:id="@+id/adminProfile"
         android:name="com.denprog.codefestapp.destinations.profile.ProfileFragment"
         android:label="Profile" />
+    <fragment
+        android:id="@+id/adminAnnouncement"
+        android:name="com.denprog.codefestapp.destinations.admin.announcement.AnnouncementFragment"
+        android:label="fragment_announcement_list"
+        tools:layout="@layout/fragment_announcement_list" >
+        <action
+            android:id="@+id/action_announcementFragment_to_addAnnouncementDialogFragment"
+            app:destination="@id/addAnnouncementDialogFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addAnnouncementDialogFragment"
+        android:name="com.denprog.codefestapp.destinations.admin.announcement.dialog.AddAnnouncementDialogFragment"
+        android:label="fragment_add_announcement_dialog_list"
+        tools:layout="@layout/fragment_add_announcement_dialog_list" >
+        <argument android:name="adminId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
