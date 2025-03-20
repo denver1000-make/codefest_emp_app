@@ -1,6 +1,7 @@
 package com.denprog.codefestapp.destinations.admin.announcement;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -9,7 +10,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.denprog.codefestapp.databinding.FragmentAnnouncementBinding;
 import com.denprog.codefestapp.destinations.admin.announcement.placeholder.PlaceholderContent.PlaceholderItem;
+import com.denprog.codefestapp.room.entity.Announcement;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,10 +21,17 @@ import java.util.List;
  */
 public class AnnouncementFragmentRecyclerViewAdapter extends RecyclerView.Adapter<AnnouncementFragmentRecyclerViewAdapter.ViewHolder> {
 
-    private final List<PlaceholderItem> mValues;
+    private final List<Announcement> mValues = new ArrayList<>();
+    private AnnouncementInteraction announcementInteraction;
 
-    public AnnouncementFragmentRecyclerViewAdapter(List<PlaceholderItem> items) {
-        mValues = items;
+    public AnnouncementFragmentRecyclerViewAdapter(AnnouncementInteraction announcementInteraction) {
+        this.announcementInteraction = announcementInteraction;
+    }
+
+    public void refreshAdapter(List<Announcement> announcements) {
+        this.mValues.clear();
+        this.mValues.addAll(announcements);
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -35,8 +45,13 @@ public class AnnouncementFragmentRecyclerViewAdapter extends RecyclerView.Adapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mContentView.setText(mValues.get(position).announcementName);
+        holder.fragmentAnnouncementBinding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                announcementInteraction.onOpen(holder.mItem.announcementId);
+            }
+        });
     }
 
     @Override
@@ -47,12 +62,14 @@ public class AnnouncementFragmentRecyclerViewAdapter extends RecyclerView.Adapte
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final TextView mIdView;
         public final TextView mContentView;
-        public PlaceholderItem mItem;
+        public Announcement mItem;
+        public FragmentAnnouncementBinding fragmentAnnouncementBinding;
 
         public ViewHolder(FragmentAnnouncementBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
+            this.fragmentAnnouncementBinding = binding;
         }
 
         @Override
@@ -60,4 +77,9 @@ public class AnnouncementFragmentRecyclerViewAdapter extends RecyclerView.Adapte
             return super.toString() + " '" + mContentView.getText() + "'";
         }
     }
+
+    public interface AnnouncementInteraction {
+        void onOpen(int announcementId);
+    }
+
 }

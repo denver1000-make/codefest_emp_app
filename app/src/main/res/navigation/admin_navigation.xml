@@ -51,6 +51,9 @@
         <action
             android:id="@+id/action_announcementFragment_to_addAnnouncementDialogFragment"
             app:destination="@id/addAnnouncementDialogFragment" />
+        <action
+            android:id="@+id/action_adminAnnouncement_to_announcementViewerFragment"
+            app:destination="@id/announcementViewerFragment" />
     </fragment>
     <fragment
         android:id="@+id/addAnnouncementDialogFragment"
@@ -58,6 +61,15 @@
         android:label="fragment_add_announcement_dialog_list"
         tools:layout="@layout/fragment_add_announcement_dialog_list" >
         <argument android:name="adminId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/announcementViewerFragment"
+        android:name="com.denprog.codefestapp.destinations.admin.announcement.announcement_viewer.AnnouncementViewerFragment"
+        android:label="fragment_announcement_viewer"
+        tools:layout="@layout/fragment_announcement_viewer" >
+        <argument
+            android:name="announcementId"
             app:argType="integer" />
     </fragment>
 </navigation>

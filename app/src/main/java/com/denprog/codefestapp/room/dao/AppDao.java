@@ -119,4 +119,10 @@ public interface AppDao {
 
     @Insert
     void insertAnnouncementAttachments(AnnouncementAttachment announcementAttachment);
+
+    @Query("SELECT * FROM Announcement")
+    List<Announcement> getAllAnnouncements();
+
+    @Query("SELECT * FROM AnnouncementAttachment WHERE announcementId = :announcementId")
+    List<AnnouncementAttachment> getAllAnnouncementAttachmentByAnnouncementId(int announcementId);
 }
